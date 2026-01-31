@@ -64,6 +64,22 @@ class EstateProperty(models.Model):
         """Return stage ID for a given XML ID or False if not found."""
         stage = self.env.ref(f"hexclad_estate.{xml_id}", raise_if_not_found=False)
         return stage.id if stage else False
+
+    def _get_stage_id_for_state(self, state):
+        """Return stage ID for a given property state."""
+        xml_id = STATE_STAGE_XML_IDS.get(state)
+        if not xml_id:
+            return False
+        return self._get_stage_id(xml_id)
+
+    def _get_default_stage_ids(self):
+        """Return a list of stage IDs in the default workflow order."""
+        stage_ids = []
+        for xml_id in STATE_STAGE_XML_IDS.values():
+            stage_id = self._get_stage_id(xml_id)
+            if stage_id:
+                stage_ids.append(stage_id)
+        return stage_ids
     
     @api.model
     def _read_group_stage_ids(self, stages, domain):
@@ -163,8 +179,8 @@ class EstateProperty(models.Model):
     )
     
     # Property Details
-    bedrooms = fields.Integer(string="Bedrooms", default=2)
-    bathrooms = fields.Float(string="Bathrooms", default=1)
+    bedrooms = fields.Integer(string="Bedrooms", default=0)
+    bathrooms = fields.Float(string="Bathrooms", default=0)
     living_area = fields.Integer(string="Living Area (sqft)")
     lot_size = fields.Integer(string="Lot Size (sqft)")
     facades = fields.Integer(string="Facades")

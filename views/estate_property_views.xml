@@ -258,17 +258,17 @@
                                         </span>
                                     </div>
                                 </div>
-                                <div class="o_kanban_primary_right estate_kanban_assignee" t-if="!context || context.show_assignee !== false">
+                                <div class="o_kanban_primary_right estate_kanban_assignee" t-if="ctx.get('show_assignee', True)">
                                     <field name="user_id" widget="many2one_avatar_user"/>
                                 </div>
-                                <div class="o_kanban_tags_section" t-if="!context || context.show_tags !== false">
+                                <div class="o_kanban_tags_section" t-if="ctx.get('show_tags', True)">
                                     <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
                                     <span t-if="!record.tag_ids.raw_value || !record.tag_ids.raw_value.length"
                                           class="o_text_muted estate_kanban_tag_placeholder">
                                         Add tag
                                     </span>
                                 </div>
-                                <div class="o_kanban_record_bottom" t-if="!context || context.show_activity !== false">
+                                <div class="o_kanban_record_bottom" t-if="ctx.get('show_activity', True)">
                                     <div class="oe_kanban_bottom_left">
                                         <field name="activity_ids" widget="kanban_activity"/>
                                     </div>

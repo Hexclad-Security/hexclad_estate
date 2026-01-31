@@ -180,6 +180,24 @@
         </field>
     </record>
 
+    <record id="estate_property_view_form_utilities_inline" model="ir.ui.view">
+        <field name="name">estate.property.form.utilities.inline</field>
+        <field name="model">estate.property</field>
+        <field name="inherit_id" ref="estate_property_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='utility_ids']" position="replace"/>
+            <xpath expr="//field[@name='survey_complete']" position="replace"/>
+            <xpath expr="//field[@name='flood_zone']" position="replace"/>
+            <xpath expr="//field[@name='lot_size']" position="after">
+                <field name="utility_ids" widget="many2many_tags"
+                       options="{'color_field': 'color'}"
+                       placeholder="Add utilities..."/>
+                <field name="survey_complete"/>
+                <field name="flood_zone"/>
+            </xpath>
+        </field>
+    </record>
+
     <!-- Tree View -->
     <record id="estate_property_view_tree" model="ir.ui.view">
         <field name="name">estate.property.tree</field>

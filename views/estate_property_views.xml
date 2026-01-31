@@ -36,7 +36,12 @@
                         <h1>
                             <field name="name" placeholder="Property Title..."/>
                         </h1>
-                        <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                        <div class="estate_property_tags">
+                            <span class="o_form_label">Tags</span>
+                            <field name="tag_ids" widget="many2many_tags"
+                                   options="{'color_field': 'color'}"
+                                   placeholder="Add tags..."/>
+                        </div>
                     </div>
                     <group>
                         <group string="Basic Info">
@@ -211,6 +216,13 @@
                         context="{'group_by': 'user_id'}"/>
                 <filter name="group_by_city" string="City"
                         context="{'group_by': 'city'}"/>
+                <separator/>
+                <filter name="hide_assignee" string="Hide Assignee"
+                        context="{'show_assignee': 0}"/>
+                <filter name="hide_tags" string="Hide Tags"
+                        context="{'show_tags': 0}"/>
+                <filter name="hide_activity" string="Hide Activities"
+                        context="{'show_activity': 0}"/>
             </search>
         </field>
     </record>
@@ -225,8 +237,6 @@
                 <field name="state"/>
                 <field name="name"/>
                 <field name="property_type_id"/>
-                <field name="expected_price"/>
-                <field name="selling_price"/>
                 <field name="user_id"/>
                 <field name="tag_ids"/>
                 <field name="image"/>
@@ -253,29 +263,22 @@
                                         </span>
                                     </div>
                                 </div>
-                                <div class="o_kanban_primary_right">
-                                    <div class="o_kanban_record_headings">
-                                        <span class="o_text_muted">Expected</span>
-                                        <div class="o_kanban_record_value">
-                                            <field name="expected_price" widget="monetary"/>
-                                        </div>
-                                        <t t-if="record.selling_price.value">
-                                            <span class="o_text_muted">Sold</span>
-                                            <div class="o_kanban_record_value">
-                                                <field name="selling_price" widget="monetary"/>
-                                            </div>
-                                        </t>
-                                    </div>
+                                <div class="o_kanban_primary_right estate_kanban_assignee"
+                                     t-if="!context || context.show_assignee !== false">
+                                    <field name="user_id" widget="many2one_avatar_user"/>
                                 </div>
-                                <div class="o_kanban_tags_section">
+                                <div class="o_kanban_tags_section"
+                                     t-if="!context || context.show_tags !== false">
                                     <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                                    <span t-if="!record.tag_ids.raw_value || !record.tag_ids.raw_value.length"
+                                          class="o_text_muted estate_kanban_tag_placeholder">
+                                        Add tag
+                                    </span>
                                 </div>
-                                <div class="o_kanban_record_bottom">
+                                <div class="o_kanban_record_bottom"
+                                     t-if="!context || context.show_activity !== false">
                                     <div class="oe_kanban_bottom_left">
                                         <field name="activity_ids" widget="kanban_activity"/>
-                                    </div>
-                                    <div class="oe_kanban_bottom_right">
-                                        <field name="user_id" widget="many2one_avatar_user"/>
                                     </div>
                                 </div>
                             </div>

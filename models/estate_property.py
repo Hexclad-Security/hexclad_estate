@@ -250,6 +250,10 @@ class EstateProperty(models.Model):
         "estate.property.tag",
         string="Tags",
     )
+    utility_ids = fields.Many2many(
+        "estate.property.utility",
+        string="Utilities",
+    )
     offer_ids = fields.One2many(
         "estate.property.offer",
         "property_id",
@@ -258,6 +262,10 @@ class EstateProperty(models.Model):
     
     # Images
     image = fields.Image(string="Main Image", max_width=1920, max_height=1920)
+
+    # Utilities & Risk
+    survey_complete = fields.Boolean(string="Survey Complete")
+    flood_zone = fields.Boolean(string="Flood Zone")
     
     # Company (multi-company support)
     company_id = fields.Many2one(

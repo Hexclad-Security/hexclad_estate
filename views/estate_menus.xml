@@ -51,6 +51,13 @@
               action="estate_property_tag_action"
               sequence="20"/>
 
+    <!-- Utilities -->
+    <menuitem id="estate_menu_property_utilities"
+              name="Utilities"
+              parent="estate_menu_settings"
+              action="estate_property_utility_action"
+              sequence="25"/>
+
     <!-- Property Stages -->
     <menuitem id="estate_menu_property_stages"
               name="Stages"

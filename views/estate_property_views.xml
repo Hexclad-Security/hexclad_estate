@@ -90,6 +90,11 @@
                                     <field name="bathrooms"/>
                                     <field name="living_area"/>
                                     <field name="lot_size"/>
+                                    <field name="utility_ids" widget="many2many_tags"
+                                           options="{'color_field': 'color'}"
+                                           placeholder="Add utilities..."/>
+                                    <field name="survey_complete"/>
+                                    <field name="flood_zone"/>
                                 </group>
                                 <group>
                                     <field name="facades"/>

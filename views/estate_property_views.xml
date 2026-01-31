@@ -61,6 +61,17 @@
                             <group>
                                 <field name="description" placeholder="Describe the property..."/>
                             </group>
+                            <group string="Utilities">
+                                <group>
+                                    <field name="utility_ids" widget="many2many_tags"
+                                           options="{'color_field': 'color'}"
+                                           placeholder="Add utilities..."/>
+                                </group>
+                                <group>
+                                    <field name="survey_complete"/>
+                                    <field name="flood_zone"/>
+                                </group>
+                            </group>
                             <group string="Address">
                                 <group>
                                     <field name="street"/>

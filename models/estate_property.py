@@ -45,7 +45,10 @@ class EstateProperty(models.Model):
         return fields.Date.context_today(self) + relativedelta(months=3)
     
     def _default_stage_id(self):
-        """Get the first stage as default."""
+        """Get the default stage for new properties."""
+        stage_id = self._get_stage_id_for_state("new")
+        if stage_id:
+            return stage_id
         return self.env['estate.property.stage'].search([], limit=1).id
 
     def _get_stage_id(self, xml_id):
@@ -56,6 +59,12 @@ class EstateProperty(models.Model):
     @api.model
     def _read_group_stage_ids(self, stages, domain):
         """Always display all stages in kanban view."""
+        stage_ids = self._get_default_stage_ids()
+        if stage_ids:
+            return self.env['estate.property.stage'].search(
+                [("id", "in", stage_ids)],
+                order="sequence",
+            )
         return self.env['estate.property.stage'].search([])
     
     # ----------------------------------------
@@ -310,6 +319,23 @@ class EstateProperty(models.Model):
     # ----------------------------------------
     # CRUD Methods
     # ----------------------------------------
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            if "stage_id" not in vals:
+                state = vals.get("state", "new")
+                stage_id = self._get_stage_id_for_state(state)
+                if stage_id:
+                    vals["stage_id"] = stage_id
+        return super().create(vals_list)
+
+    def write(self, vals):
+        if "state" in vals and "stage_id" not in vals:
+            stage_id = self._get_stage_id_for_state(vals.get("state"))
+            if stage_id:
+                vals["stage_id"] = stage_id
+        return super().write(vals)
     
     @api.ondelete(at_uninstall=False)
     def _unlink_if_not_new_or_canceled(self):
@@ -322,6 +348,22 @@ class EstateProperty(models.Model):
     # ----------------------------------------
     # Action Methods
     # ----------------------------------------
+
+    def action_offer_received(self):
+        """Mark property as offer received."""
+        for record in self:
+            if record.state in ("sold", "canceled"):
+                raise UserError("You cannot receive offers on a sold or canceled property.")
+            record.write({"state": "offer_received"})
+        return True
+
+    def action_offer_accepted(self):
+        """Mark property as offer accepted."""
+        for record in self:
+            if record.state in ("sold", "canceled"):
+                raise UserError("You cannot accept offers on a sold or canceled property.")
+            record.write({"state": "offer_accepted"})
+        return True
     
     def action_sold(self):
         """Mark property as sold."""

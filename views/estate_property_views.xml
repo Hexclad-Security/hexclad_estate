@@ -11,6 +11,12 @@
         <field name="arch" type="xml">
             <form string="Property">
                 <header>
+                    <button name="action_offer_received" type="object" string="Offer Received"
+                            class="oe_highlight"
+                            invisible="state in ['offer_received', 'offer_accepted', 'sold', 'canceled']"/>
+                    <button name="action_offer_accepted" type="object" string="Offer Accepted"
+                            class="oe_highlight"
+                            invisible="state in ['offer_accepted', 'sold', 'canceled']"/>
                     <button name="action_sold" type="object" string="Sold"
                             class="oe_highlight"
                             invisible="state in ['sold', 'canceled']"/>

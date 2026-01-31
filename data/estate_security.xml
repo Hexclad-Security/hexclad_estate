@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <!-- 
+    <!--
     Odoo 19 Security Groups
     Using base.module_category_hidden to simplify setup.
     The groups will appear under Administration > Groups.

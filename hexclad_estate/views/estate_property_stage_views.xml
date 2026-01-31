@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- ============================================================ -->
+    <!-- ESTATE PROPERTY STAGE VIEWS -->
+    <!-- ============================================================ -->
+
+    <!-- Form View -->
+    <record id="estate_property_stage_view_form" model="ir.ui.view">
+        <field name="name">estate.property.stage.form</field>
+        <field name="model">estate.property.stage</field>
+        <field name="arch" type="xml">
+            <form string="Property Stage">
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1>
+                            <field name="name" placeholder="Stage Name..."/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="sequence"/>
+                            <field name="fold"/>
+                        </group>
+                        <group>
+                            <field name="is_won"/>
+                            <field name="is_lost"/>
+                        </group>
+                    </group>
+                    <group string="Requirements">
+                        <field name="requirements" nolabel="1" placeholder="Enter internal requirements or notes for this stage..."/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- List View -->
+    <record id="estate_property_stage_view_list" model="ir.ui.view">
+        <field name="name">estate.property.stage.list</field>
+        <field name="model">estate.property.stage</field>
+        <field name="arch" type="xml">
+            <list string="Property Stages" editable="bottom">
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="is_won"/>
+                <field name="is_lost"/>
+                <field name="fold"/>
+                <field name="property_count"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Action -->
+    <record id="estate_property_stage_action" model="ir.actions.act_window">
+        <field name="name">Stages</field>
+        <field name="res_model">estate.property.stage</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create stages for your property pipeline
+            </p>
+            <p>
+                Stages help you track properties through your sales process.
+            </p>
+        </field>
+    </record>
+
+</odoo>

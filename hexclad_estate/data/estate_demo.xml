@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Demo Properties -->
+        <record id="demo_property_1" model="estate.property">
+            <field name="name">123 Main Street - Starter Home</field>
+            <field name="description">Charming 3-bedroom starter home in great neighborhood. Perfect for first-time buyers or investors. Minor cosmetic updates needed.</field>
+            <field name="street">123 Main Street</field>
+            <field name="city">Boston</field>
+            <field name="postcode">02101</field>
+            <field name="property_type_id" ref="property_type_house"/>
+            <field name="expected_price">285000</field>
+            <field name="bedrooms">3</field>
+            <field name="bathrooms">1.5</field>
+            <field name="living_area">1450</field>
+            <field name="lot_size">5000</field>
+            <field name="garage" eval="True"/>
+            <field name="garden" eval="True"/>
+            <field name="garden_area">500</field>
+            <field name="garden_orientation">S</field>
+            <field name="purchase_price">260000</field>
+            <field name="arv">340000</field>
+            <field name="rehab_cost">25000</field>
+            <field name="closing_costs">8000</field>
+            <field name="tag_ids" eval="[(6, 0, [ref('property_tag_investment'), ref('property_tag_flip')])]"/>
+        </record>
+
+        <record id="demo_property_2" model="estate.property">
+            <field name="name">456 Oak Avenue - Multi-Family</field>
+            <field name="description">Well-maintained duplex with strong rental history. Both units currently occupied with long-term tenants. Great cash flow opportunity.</field>
+            <field name="street">456 Oak Avenue</field>
+            <field name="city">Quincy</field>
+            <field name="postcode">02169</field>
+            <field name="property_type_id" ref="property_type_duplex"/>
+            <field name="expected_price">450000</field>
+            <field name="bedrooms">4</field>
+            <field name="bathrooms">2</field>
+            <field name="living_area">2200</field>
+            <field name="lot_size">6500</field>
+            <field name="garage" eval="True"/>
+            <field name="purchase_price">420000</field>
+            <field name="monthly_rent">3200</field>
+            <field name="monthly_expenses">800</field>
+            <field name="tag_ids" eval="[(6, 0, [ref('property_tag_rental'), ref('property_tag_turnkey')])]"/>
+        </record>
+
+        <record id="demo_property_3" model="estate.property">
+            <field name="name">789 Fixer Lane - Renovation Project</field>
+            <field name="description">Estate sale property needs full renovation. Great bones, excellent location. ARV estimated at $425K. Not for the faint of heart!</field>
+            <field name="street">789 Fixer Lane</field>
+            <field name="city">Braintree</field>
+            <field name="postcode">02184</field>
+            <field name="property_type_id" ref="property_type_house"/>
+            <field name="expected_price">225000</field>
+            <field name="bedrooms">4</field>
+            <field name="bathrooms">2</field>
+            <field name="living_area">1800</field>
+            <field name="lot_size">8000</field>
+            <field name="garage" eval="False"/>
+            <field name="garden" eval="True"/>
+            <field name="garden_area">1000</field>
+            <field name="purchase_price">200000</field>
+            <field name="arv">425000</field>
+            <field name="rehab_cost">120000</field>
+            <field name="closing_costs">12000</field>
+            <field name="tag_ids" eval="[(6, 0, [ref('property_tag_fixer_upper'), ref('property_tag_flip'), ref('property_tag_hot_deal')])]"/>
+        </record>
+
+        <record id="demo_property_4" model="estate.property">
+            <field name="name">Waterfront Condo Unit 5B</field>
+            <field name="description">Stunning waterfront condo with ocean views. Modern finishes, HOA covers most maintenance. Perfect vacation rental potential.</field>
+            <field name="street">100 Harbor View Drive, Unit 5B</field>
+            <field name="city">Hull</field>
+            <field name="postcode">02045</field>
+            <field name="property_type_id" ref="property_type_condo"/>
+            <field name="expected_price">385000</field>
+            <field name="bedrooms">2</field>
+            <field name="bathrooms">2</field>
+            <field name="living_area">1100</field>
+            <field name="monthly_rent">2800</field>
+            <field name="monthly_expenses">650</field>
+            <field name="tag_ids" eval="[(6, 0, [ref('property_tag_rental'), ref('property_tag_turnkey')])]"/>
+        </record>
+
+        <!-- Demo Offers -->
+        <record id="demo_offer_1" model="estate.property.offer">
+            <field name="property_id" ref="demo_property_1"/>
+            <field name="partner_id" ref="base.res_partner_1"/>
+            <field name="price">270000</field>
+            <field name="validity">14</field>
+        </record>
+
+        <record id="demo_offer_2" model="estate.property.offer">
+            <field name="property_id" ref="demo_property_1"/>
+            <field name="partner_id" ref="base.res_partner_2"/>
+            <field name="price">280000</field>
+            <field name="validity">7</field>
+        </record>
+
+        <record id="demo_offer_3" model="estate.property.offer">
+            <field name="property_id" ref="demo_property_3"/>
+            <field name="partner_id" ref="base.res_partner_3"/>
+            <field name="price">210000</field>
+            <field name="validity">10</field>
+        </record>
+    </data>
+</odoo>

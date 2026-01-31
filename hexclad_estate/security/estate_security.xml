@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- 
+    Odoo 19 Security Groups
+    Using base.module_category_hidden to simplify setup.
+    The groups will appear under Administration > Groups.
+    -->
+
+    <!-- User Group: Can view and create properties -->
+    <record id="estate_group_user" model="res.groups">
+        <field name="name">Real Estate / Agent</field>
+        <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+        <field name="comment">Real Estate Agents can view and manage their assigned properties.</field>
+    </record>
+
+    <!-- Manager Group: Full access -->
+    <record id="estate_group_manager" model="res.groups">
+        <field name="name">Real Estate / Manager</field>
+        <field name="implied_ids" eval="[(4, ref('estate_group_user'))]"/>
+        <field name="comment">Real Estate Managers have full access to all properties and settings.</field>
+    </record>
+</odoo>

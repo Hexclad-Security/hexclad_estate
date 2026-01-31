@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- ============================================================ -->
+    <!-- RES.USERS VIEW EXTENSION -->
+    <!-- ============================================================ -->
+
+    <!-- Extend User Form to show their properties -->
+    <record id="res_users_view_form_inherit_estate" model="ir.ui.view">
+        <field name="name">res.users.form.inherit.estate</field>
+        <field name="model">res.users</field>
+        <field name="inherit_id" ref="base.view_users_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='preferences']" position="after">
+                <page string="Real Estate" name="real_estate" groups="hexclad_estate.estate_group_user">
+                    <group string="Assigned Properties">
+                        <field name="property_ids" nolabel="1">
+                            <list>
+                                <field name="name"/>
+                                <field name="property_type_id"/>
+                                <field name="expected_price"/>
+                                <field name="state"/>
+                            </list>
+                        </field>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

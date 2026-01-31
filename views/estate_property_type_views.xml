@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- ============================================================ -->
+    <!-- ESTATE PROPERTY TYPE VIEWS -->
+    <!-- ============================================================ -->
+
+    <!-- Form View -->
+    <record id="estate_property_type_view_form" model="ir.ui.view">
+        <field name="name">estate.property.type.form</field>
+        <field name="model">estate.property.type</field>
+        <field name="arch" type="xml">
+            <form string="Property Type">
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_offers" type="object"
+                                class="oe_stat_button" icon="fa-money">
+                            <field name="offer_count" widget="statinfo" string="Offers"/>
+                        </button>
+                        <button name="action_view_properties" type="object"
+                                class="oe_stat_button" icon="fa-building">
+                            <field name="property_count" widget="statinfo" string="Properties"/>
+                        </button>
+                    </div>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" placeholder="Property Type..."/>
+                        </h1>
+                    </div>
+                    <group>
+                        <field name="sequence"/>
+                    </group>
+                    <notebook>
+                        <page string="Properties" name="properties">
+                            <field name="property_ids" readonly="1"/>
+                        </page>
+                        <page string="Offers" name="offers">
+                            <field name="offer_ids" readonly="1"/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Tree View -->
+    <record id="estate_property_type_view_tree" model="ir.ui.view">
+        <field name="name">estate.property.type.tree</field>
+        <field name="model">estate.property.type</field>
+        <field name="arch" type="xml">
+            <list string="Property Types">
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="property_count"/>
+                <field name="offer_count"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Action -->
+    <record id="estate_property_type_action" model="ir.actions.act_window">
+        <field name="name">Property Types</field>
+        <field name="res_model">estate.property.type</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create property types
+            </p>
+            <p>
+                Property types help organize your listings (e.g., House, Apartment, Land).
+            </p>
+        </field>
+    </record>
+
+</odoo>

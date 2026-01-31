@@ -36,7 +36,12 @@
                         <h1>
                             <field name="name" placeholder="Property Title..."/>
                         </h1>
-                        <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                        <div class="estate_property_tags">
+                            <span class="o_form_label">Tags</span>
+                            <field name="tag_ids" widget="many2many_tags"
+                                   options="{'color_field': 'color'}"
+                                   placeholder="Add tags..."/>
+                        </div>
                     </div>
                     <group>
                         <group string="Basic Info">

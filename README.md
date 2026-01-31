@@ -1,6 +1,6 @@
 # HexClad Real Estate Module for Odoo 19
 
-A comprehensive real estate property management module built for **NDWCM RE Group** operations.
+A comprehensive real estate property management module built for **RANCS Capital LLC** operations.
 
 ## Features
 
@@ -101,7 +101,7 @@ LGPL-3
 
 ## Author
 
-HexClad Security / NDWCM RE Group
+Hexclad Security 
 
 ---
 

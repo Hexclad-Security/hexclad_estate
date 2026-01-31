@@ -35,7 +35,7 @@ Built by HexClad Security for RANCS Capital LLC.
     ],
     "data": [
         # Security first (for existing models)
-        "security/estate_security.xml",
+        "data/estate_security.xml",
         "security/ir.model.access.csv",
         # Data - stages must be loaded early
         "data/estate_property_stage_data.xml",

@@ -1,4 +1,4 @@
-# HexClad Real Estate Module for Odoo 19
+# RANCS Capital Real Estate Module for Odoo 19
 
 A comprehensive real estate property management module built for **RANCS Capital LLC** operations.
 
@@ -39,7 +39,7 @@ A comprehensive real estate property management module built for **RANCS Capital
 1. Copy the `hexclad_estate` folder to your Odoo custom addons directory
 2. Restart Odoo
 3. Go to Apps and click "Update Apps List"
-4. Search for "HexClad Real Estate" and install
+4. Search for "RANCS Capital Real Estate" and install
 
 ## Directory Structure
 
@@ -101,7 +101,7 @@ LGPL-3
 
 ## Author
 
-Hexclad Security 
+RANCS Capital LLC
 
 ---
 

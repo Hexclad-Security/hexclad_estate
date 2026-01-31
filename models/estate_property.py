@@ -47,6 +47,11 @@ class EstateProperty(models.Model):
     def _default_stage_id(self):
         """Get the first stage as default."""
         return self.env['estate.property.stage'].search([], limit=1).id
+
+    def _get_stage_id(self, xml_id):
+        """Return stage ID for a given XML ID or False if not found."""
+        stage = self.env.ref(f"hexclad_estate.{xml_id}", raise_if_not_found=False)
+        return stage.id if stage else False
     
     @api.model
     def _read_group_stage_ids(self, stages, domain):
@@ -324,6 +329,9 @@ class EstateProperty(models.Model):
             if record.state == "canceled":
                 raise UserError("A canceled property cannot be sold.")
             record.state = "sold"
+            stage_id = record._get_stage_id("stage_won")
+            if stage_id:
+                record.stage_id = stage_id
         return True
     
     def action_cancel(self):
@@ -332,6 +340,9 @@ class EstateProperty(models.Model):
             if record.state == "sold":
                 raise UserError("A sold property cannot be canceled.")
             record.state = "canceled"
+            stage_id = record._get_stage_id("stage_lost")
+            if stage_id:
+                record.stage_id = stage_id
         return True
     
     def action_reset(self):
@@ -340,4 +351,7 @@ class EstateProperty(models.Model):
             record.state = "new"
             record.selling_price = 0
             record.buyer_id = False
+            stage_id = record._get_stage_id("stage_new")
+            if stage_id:
+                record.stage_id = stage_id
         return True

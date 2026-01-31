@@ -41,6 +41,7 @@ Built for RANCS Capital LLC.
         "data/estate_property_stage_data.xml",
         "data/estate_property_type_data.xml",
         "data/estate_property_tag_data.xml",
+        "data/estate_property_utility_data.xml",
         # Views - load related models first
         "views/estate_property_stage_views.xml",
         "views/estate_property_type_views.xml",

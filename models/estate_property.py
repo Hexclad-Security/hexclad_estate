@@ -227,6 +227,13 @@ class EstateProperty(models.Model):
         required=True,
         default=lambda self: self.env.company,
     )
+    currency_id = fields.Many2one(
+        "res.currency",
+        string="Currency",
+        related="company_id.currency_id",
+        store=True,
+        readonly=True,
+    )
     
     # ----------------------------------------
     # Compute Methods
@@ -235,7 +242,7 @@ class EstateProperty(models.Model):
     @api.depends("living_area", "garden_area")
     def _compute_total_area(self):
         for record in self:
-            record.total_area = record.living_area + record.garden_area
+            record.total_area = (record.living_area or 0) + (record.garden_area or 0)
     
     @api.depends("offer_ids.price")
     def _compute_best_price(self):

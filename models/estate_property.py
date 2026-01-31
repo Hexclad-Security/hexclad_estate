@@ -64,20 +64,6 @@ class EstateProperty(models.Model):
         """Return stage ID for a given XML ID or False if not found."""
         stage = self.env.ref(f"hexclad_estate.{xml_id}", raise_if_not_found=False)
         return stage.id if stage else False
-
-    def _get_stage_id_for_state(self, state):
-        """Map a property state to the configured stage ID."""
-        xml_id = STATE_STAGE_XML_IDS.get(state)
-        return self._get_stage_id(xml_id) if xml_id else False
-
-    def _get_default_stage_ids(self):
-        """Return the stage IDs that should appear in the pipeline."""
-        stage_ids = []
-        for state in STATE_STAGE_XML_IDS:
-            stage_id = self._get_stage_id_for_state(state)
-            if stage_id:
-                stage_ids.append(stage_id)
-        return stage_ids
     
     @api.model
     def _read_group_stage_ids(self, stages, domain):
@@ -348,23 +334,14 @@ class EstateProperty(models.Model):
         for vals in vals_list:
             if "stage_id" not in vals:
                 state = vals.get("state", "new")
-                stage_id_getter = getattr(self, "_get_stage_id_for_state", None)
-                if stage_id_getter:
-                    stage_id = stage_id_getter(state)
-                else:
-                    stage_id = self._get_stage_id(STATE_STAGE_XML_IDS.get(state))
+                stage_id = self._get_stage_id_for_state(state)
                 if stage_id:
                     vals["stage_id"] = stage_id
         return super().create(vals_list)
 
     def write(self, vals):
         if "state" in vals and "stage_id" not in vals:
-            state = vals.get("state")
-            stage_id_getter = getattr(self, "_get_stage_id_for_state", None)
-            if stage_id_getter:
-                stage_id = stage_id_getter(state)
-            else:
-                stage_id = self._get_stage_id(STATE_STAGE_XML_IDS.get(state))
+            stage_id = self._get_stage_id_for_state(vals.get("state"))
             if stage_id:
                 vals["stage_id"] = stage_id
         return super().write(vals)

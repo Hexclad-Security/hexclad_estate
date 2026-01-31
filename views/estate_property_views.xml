@@ -38,6 +38,7 @@
                         </h1>
                         <div class="estate_property_tags">
                             <span class="o_form_label">Tags</span>
+                            <br/>
                             <field name="tag_ids" widget="many2many_tags"
                                    options="{'color_field': 'color'}"
                                    placeholder="Add tags..."/>

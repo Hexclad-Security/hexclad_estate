@@ -16,3 +16,15 @@
     height: 100%;
     object-fit: cover;
 }
+
+.estate_kanban_assignee {
+    display: flex;
+    justify-content: flex-end;
+    align-items: flex-start;
+}
+
+.estate_kanban_tag_placeholder {
+    display: inline-flex;
+    margin-top: 4px;
+    font-size: 0.85rem;
+}

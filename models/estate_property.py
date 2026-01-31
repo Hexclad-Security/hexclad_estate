@@ -6,6 +6,15 @@ from odoo.tools import float_compare, float_is_zero
 from dateutil.relativedelta import relativedelta
 
 
+STATE_STAGE_XML_IDS = {
+    "new": "stage_new",
+    "offer_received": "stage_offer",
+    "offer_accepted": "stage_under_contract",
+    "sold": "stage_won",
+    "canceled": "stage_lost",
+}
+
+
 class EstateProperty(models.Model):
     """
     Main property model for real estate listings.

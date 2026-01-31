@@ -58,6 +58,7 @@ Built for RANCS Capital LLC.
             "hexclad_estate/static/src/css/estate_property.css",
         ],
     },
+    "post_init_hook": "post_init_hook",
     "installable": True,
     "application": True,
     "auto_install": False,

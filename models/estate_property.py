@@ -6,6 +6,15 @@ from odoo.tools import float_compare, float_is_zero
 from dateutil.relativedelta import relativedelta
 
 
+STATE_STAGE_XML_IDS = {
+    "new": "stage_new",
+    "offer_received": "stage_offer",
+    "offer_accepted": "stage_under_contract",
+    "sold": "stage_won",
+    "canceled": "stage_lost",
+}
+
+
 class EstateProperty(models.Model):
     """
     Main property model for real estate listings.
@@ -45,12 +54,40 @@ class EstateProperty(models.Model):
         return fields.Date.context_today(self) + relativedelta(months=3)
     
     def _default_stage_id(self):
-        """Get the first stage as default."""
+        """Get the default stage for new properties."""
+        stage_id = self._get_stage_id_for_state("new")
+        if stage_id:
+            return stage_id
         return self.env['estate.property.stage'].search([], limit=1).id
+
+    def _get_stage_id(self, xml_id):
+        """Return stage ID for a given XML ID or False if not found."""
+        stage = self.env.ref(f"hexclad_estate.{xml_id}", raise_if_not_found=False)
+        return stage.id if stage else False
+
+    def _get_stage_id_for_state(self, state):
+        """Map a property state to the configured stage ID."""
+        xml_id = STATE_STAGE_XML_IDS.get(state)
+        return self._get_stage_id(xml_id) if xml_id else False
+
+    def _get_default_stage_ids(self):
+        """Return the stage IDs that should appear in the pipeline."""
+        stage_ids = []
+        for state in STATE_STAGE_XML_IDS:
+            stage_id = self._get_stage_id_for_state(state)
+            if stage_id:
+                stage_ids.append(stage_id)
+        return stage_ids
     
     @api.model
     def _read_group_stage_ids(self, stages, domain):
         """Always display all stages in kanban view."""
+        stage_ids = self._get_default_stage_ids()
+        if stage_ids:
+            return self.env['estate.property.stage'].search(
+                [("id", "in", stage_ids)],
+                order="sequence",
+            )
         return self.env['estate.property.stage'].search([])
     
     # ----------------------------------------
@@ -305,6 +342,32 @@ class EstateProperty(models.Model):
     # ----------------------------------------
     # CRUD Methods
     # ----------------------------------------
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            if "stage_id" not in vals:
+                state = vals.get("state", "new")
+                stage_id_getter = getattr(self, "_get_stage_id_for_state", None)
+                if stage_id_getter:
+                    stage_id = stage_id_getter(state)
+                else:
+                    stage_id = self._get_stage_id(STATE_STAGE_XML_IDS.get(state))
+                if stage_id:
+                    vals["stage_id"] = stage_id
+        return super().create(vals_list)
+
+    def write(self, vals):
+        if "state" in vals and "stage_id" not in vals:
+            state = vals.get("state")
+            stage_id_getter = getattr(self, "_get_stage_id_for_state", None)
+            if stage_id_getter:
+                stage_id = stage_id_getter(state)
+            else:
+                stage_id = self._get_stage_id(STATE_STAGE_XML_IDS.get(state))
+            if stage_id:
+                vals["stage_id"] = stage_id
+        return super().write(vals)
     
     @api.ondelete(at_uninstall=False)
     def _unlink_if_not_new_or_canceled(self):
@@ -317,6 +380,22 @@ class EstateProperty(models.Model):
     # ----------------------------------------
     # Action Methods
     # ----------------------------------------
+
+    def action_offer_received(self):
+        """Mark property as offer received."""
+        for record in self:
+            if record.state in ("sold", "canceled"):
+                raise UserError("You cannot receive offers on a sold or canceled property.")
+            record.write({"state": "offer_received"})
+        return True
+
+    def action_offer_accepted(self):
+        """Mark property as offer accepted."""
+        for record in self:
+            if record.state in ("sold", "canceled"):
+                raise UserError("You cannot accept offers on a sold or canceled property.")
+            record.write({"state": "offer_accepted"})
+        return True
     
     def action_sold(self):
         """Mark property as sold."""
@@ -324,6 +403,9 @@ class EstateProperty(models.Model):
             if record.state == "canceled":
                 raise UserError("A canceled property cannot be sold.")
             record.state = "sold"
+            stage_id = record._get_stage_id("stage_won")
+            if stage_id:
+                record.stage_id = stage_id
         return True
     
     def action_cancel(self):
@@ -332,6 +414,9 @@ class EstateProperty(models.Model):
             if record.state == "sold":
                 raise UserError("A sold property cannot be canceled.")
             record.state = "canceled"
+            stage_id = record._get_stage_id("stage_lost")
+            if stage_id:
+                record.stage_id = stage_id
         return True
     
     def action_reset(self):
@@ -340,4 +425,7 @@ class EstateProperty(models.Model):
             record.state = "new"
             record.selling_price = 0
             record.buyer_id = False
+            stage_id = record._get_stage_id("stage_new")
+            if stage_id:
+                record.stage_id = stage_id
         return True

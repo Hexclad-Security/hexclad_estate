@@ -1,16 +1,16 @@
 # -*- coding: utf-8 -*-
-# HexClad Real Estate Module for Odoo 19
-# Built by HexClad Security for RANCS Capital LLC
+# RANCS Capital Real Estate Module for Odoo 19
+# Built for RANCS Capital LLC
 # License: LGPL-3
 
 {
-    "name": "HexClad Real Estate",
+    "name": "RANCS Capital Real Estate",
     "version": "19.0.1.0.0",
     "category": "Real Estate/Brokerage",
-    "summary": "Real Estate Property Management & Investment Tracking",
+    "summary": "Real Estate Property Management & Investment Tracking for RANCS Capital",
     "description": """
-HexClad Real Estate Management
-==============================
+RANCS Capital Real Estate Management
+====================================
 
 A comprehensive real estate module for property investment and management.
 
@@ -23,10 +23,10 @@ Features:
 * Salesperson assignment and tracking
 * State workflow (New → Offer Received → Offer Accepted → Sold/Canceled)
 
-Built by HexClad Security for RANCS Capital LLC.
+Built for RANCS Capital LLC.
     """,
-    "author": "HexClad Security",
-    "website": "https://hexcladsecurity.com",
+    "author": "RANCS Capital LLC",
+    "website": "https://rancscapital.com",
     "license": "LGPL-3",
     "depends": [
         "base",
@@ -54,8 +54,11 @@ Built by HexClad Security for RANCS Capital LLC.
         "data/estate_demo.xml",
     ],
     "assets": {
-        # Add custom CSS/JS here later if needed
+        "web.assets_backend": [
+            "hexclad_estate/static/src/css/estate_property.css",
+        ],
     },
+    "post_init_hook": "post_init_hook",
     "installable": True,
     "application": True,
     "auto_install": False,

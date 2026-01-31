@@ -234,20 +234,42 @@
                 <progressbar field="activity_state" colors='{"planned": "success", "today": "warning", "overdue": "danger"}'/>
                 <templates>
                     <t t-name="card">
-                        <div class="o_kanban_record">
-                            <field name="image" widget="image" class="o_kanban_image estate_kanban_image"/>
+                        <div class="o_kanban_record o_kanban_record_has_image">
+                            <div class="o_kanban_image estate_kanban_image">
+                                <field name="image" widget="image" class="o_kanban_image_fill"/>
+                            </div>
                             <div class="oe_kanban_details">
-                                <strong class="o_kanban_record_title">
-                                    <field name="name"/>
-                                </strong>
+                                <div class="o_kanban_primary_left">
+                                    <strong class="o_kanban_record_title">
+                                        <field name="name"/>
+                                    </strong>
+                                    <div class="o_kanban_subtitle">
+                                        <span t-if="record.property_type_id.value">
+                                            <field name="property_type_id"/>
+                                        </span>
+                                        <span t-if="record.city.value">
+                                            <t t-if="record.property_type_id.value"> • </t>
+                                            <field name="city"/>
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="o_kanban_primary_right">
+                                    <div class="o_kanban_record_headings">
+                                        <span class="o_text_muted">Expected</span>
+                                        <div class="o_kanban_record_value">
+                                            <field name="expected_price" widget="monetary"/>
+                                        </div>
+                                        <t t-if="record.selling_price.value">
+                                            <span class="o_text_muted">Sold</span>
+                                            <div class="o_kanban_record_value">
+                                                <field name="selling_price" widget="monetary"/>
+                                            </div>
+                                        </t>
+                                    </div>
+                                </div>
                                 <div class="o_kanban_tags_section">
                                     <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
                                 </div>
-                                <ul>
-                                    <li t-if="record.property_type_id.value"><field name="property_type_id"/></li>
-                                    <li t-if="record.city.value"><field name="city"/></li>
-                                    <li>Expected: <field name="expected_price" widget="monetary"/></li>
-                                </ul>
                                 <div class="o_kanban_record_bottom">
                                     <div class="oe_kanban_bottom_left">
                                         <field name="activity_ids" widget="kanban_activity"/>

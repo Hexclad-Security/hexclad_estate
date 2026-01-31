@@ -120,6 +120,9 @@ class EstatePropertyOffer(models.Model):
                 
                 # Update property state
                 property_obj.state = "offer_received"
+                stage_id = property_obj._get_stage_id("stage_offer")
+                if stage_id:
+                    property_obj.stage_id = stage_id
         
         return super().create(vals_list)
     
@@ -148,6 +151,9 @@ class EstatePropertyOffer(models.Model):
                 "selling_price": record.price,
                 "buyer_id": record.partner_id.id,
             })
+            stage_id = record.property_id._get_stage_id("stage_under_contract")
+            if stage_id:
+                record.property_id.stage_id = stage_id
         
         return True
     

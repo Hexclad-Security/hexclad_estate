@@ -214,8 +214,8 @@
         <field name="name">estate.property.kanban</field>
         <field name="model">estate.property</field>
         <field name="arch" type="xml">
-            <kanban default_group_by="stage_id" class="o_kanban_mobile" on_create="quick_create" quick_create_view="hexclad_estate.estate_property_view_form_quick_create">
-                <field name="stage_id" options="{'group_by_tooltip': {'requirements': 'Requirements'}}"/>
+            <kanban default_group_by="state" class="o_kanban_mobile" on_create="quick_create" quick_create_view="hexclad_estate.estate_property_view_form_quick_create">
+                <field name="state"/>
                 <field name="name"/>
                 <field name="property_type_id"/>
                 <field name="expected_price"/>

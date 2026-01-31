@@ -1,8 +1,5 @@
 # -*- coding: utf-8 -*-
 
-from odoo import api, SUPERUSER_ID
-
-
 STAGE_UPDATES = {
     "stage_new": {"name": "New", "sequence": 10, "is_won": False, "is_lost": False, "fold": False},
     "stage_offer": {"name": "Offer Received", "sequence": 20, "is_won": False, "is_lost": False, "fold": False},
@@ -18,8 +15,7 @@ STAGE_UPDATES = {
 }
 
 
-def post_init_hook(cr, registry):
-    env = api.Environment(cr, SUPERUSER_ID, {})
+def post_init_hook(env):
     for xml_id, values in STAGE_UPDATES.items():
         stage = env.ref(f"hexclad_estate.{xml_id}", raise_if_not_found=False)
         if stage:

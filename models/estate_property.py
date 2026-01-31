@@ -55,27 +55,6 @@ class EstateProperty(models.Model):
         """Return stage ID for a given XML ID or False if not found."""
         stage = self.env.ref(f"hexclad_estate.{xml_id}", raise_if_not_found=False)
         return stage.id if stage else False
-
-    def _get_stage_id_for_state(self, state):
-        """Map a property state to the configured stage ID."""
-        state_stage_map = {
-            "new": "stage_new",
-            "offer_received": "stage_offer",
-            "offer_accepted": "stage_under_contract",
-            "sold": "stage_won",
-            "canceled": "stage_lost",
-        }
-        xml_id = state_stage_map.get(state)
-        return self._get_stage_id(xml_id) if xml_id else False
-
-    def _get_default_stage_ids(self):
-        """Return the stage IDs that should appear in the pipeline."""
-        stage_ids = []
-        for state in ("new", "offer_received", "offer_accepted", "sold", "canceled"):
-            stage_id = self._get_stage_id_for_state(state)
-            if stage_id:
-                stage_ids.append(stage_id)
-        return stage_ids
     
     @api.model
     def _read_group_stage_ids(self, stages, domain):

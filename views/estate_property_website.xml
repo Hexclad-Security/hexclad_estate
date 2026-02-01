@@ -185,7 +185,7 @@
                             </span>
                         </div>
 
-                        <div class="card shadow-sm mb-4 estate-detail-card">
+                        <div class="card shadow-sm mb-4 estate-detail-card estate-price-card">
                             <div class="card-body">
                                 <h5 class="card-title mb-3">Sale Information</h5>
                                 <div class="d-flex justify-content-between align-items-start mb-3">
@@ -222,12 +222,20 @@
                                         </li>
                                     </t>
                                 </ul>
+                                <div class="d-flex flex-column flex-sm-row gap-2 mt-4">
+                                    <a class="btn btn-primary flex-fill" href="#property-inquiry">
+                                        Schedule a tour
+                                    </a>
+                                    <a class="btn btn-outline-primary flex-fill" href="#property-inquiry">
+                                        Request info
+                                    </a>
+                                </div>
                                 <t t-if="property.tag_ids">
-                                    <div class="mt-3">
+                                    <div class="mt-4">
                                         <div class="text-muted mb-2">Tags</div>
-                                        <div class="d-flex flex-wrap gap-2">
+                                        <div class="d-flex flex-wrap gap-2 estate-pill-list">
                                             <t t-foreach="property.tag_ids" t-as="tag">
-                                                <span class="badge rounded-pill text-bg-light estate-tag">
+                                                <span class="badge rounded-pill text-bg-light estate-tag estate-pill">
                                                     <t t-esc="tag.name"/>
                                                 </span>
                                             </t>
@@ -238,46 +246,73 @@
                         </div>
 
                         <div class="card shadow-sm mb-4 estate-gallery" data-gallery="property">
-                            <div class="estate-gallery__hero">
+                            <div class="estate-gallery__mosaic">
                                 <t t-if="property.image_ids">
-                                    <img class="estate-gallery__hero-image"
-                                         id="estateHeroImage"
-                                         t-att-src="'/web/image/estate.property.image/%s/image_1920' % property.image_ids[0].id"
-                                         t-att-alt="property.image_ids[0].name or property.name"
-                                         t-att-data-index="0"/>
+                                    <div class="estate-gallery__mosaic-main">
+                                        <button type="button"
+                                                class="estate-gallery__mosaic-item estate-gallery__mosaic-item--main"
+                                                t-att-data-gallery-index="0"
+                                                t-att-data-full-src="'/web/image/estate.property.image/%s/image_1920' % property.image_ids[0].id"
+                                                t-att-aria-label="'View image %s' % 1">
+                                            <img class="estate-gallery__mosaic-image"
+                                                 t-att-src="'/web/image/estate.property.image/%s/image_1920' % property.image_ids[0].id"
+                                                 t-att-alt="property.image_ids[0].name or property.name"/>
+                                        </button>
+                                        <button type="button"
+                                                class="estate-gallery__view-all"
+                                                t-att-data-gallery-index="0"
+                                                aria-label="View all photos">
+                                            <i class="fa fa-th" aria-hidden="true"></i>
+                                            <span>View all photos</span>
+                                            <t t-if="len(property.image_ids)">
+                                                <span class="estate-gallery__view-count">
+                                                    (<t t-esc="len(property.image_ids)"/>)
+                                                </span>
+                                            </t>
+                                        </button>
+                                    </div>
+                                    <div class="estate-gallery__mosaic-grid">
+                                        <t t-foreach="property.image_ids" t-as="image" t-foreach-index="index">
+                                            <t t-if="(index or 0) &gt; 0 and (index or 0) &lt; 5">
+                                                <button type="button"
+                                                        class="estate-gallery__mosaic-item"
+                                                        t-att-data-gallery-index="index"
+                                                        t-att-data-full-src="'/web/image/estate.property.image/%s/image_1920' % image.id"
+                                                        t-att-aria-label="'View image %s' % ((index or 0) + 1)">
+                                                    <img class="estate-gallery__mosaic-image"
+                                                         t-att-src="'/web/image/estate.property.image/%s/image_1920' % image.id"
+                                                         t-att-alt="image.name or property.name"/>
+                                                </button>
+                                            </t>
+                                        </t>
+                                    </div>
                                 </t>
                                 <t t-elif="property.image">
-                                    <img class="estate-gallery__hero-image"
-                                         id="estateHeroImage"
-                                         t-att-src="'/web/image/estate.property/%s/image' % property.id"
-                                         t-att-alt="property.name"
-                                         t-att-data-index="0"/>
+                                    <div class="estate-gallery__mosaic-main">
+                                        <button type="button"
+                                                class="estate-gallery__mosaic-item estate-gallery__mosaic-item--main"
+                                                t-att-data-gallery-index="0"
+                                                t-att-data-full-src="'/web/image/estate.property/%s/image' % property.id"
+                                                t-att-aria-label="'View image %s' % 1">
+                                            <img class="estate-gallery__mosaic-image"
+                                                 t-att-src="'/web/image/estate.property/%s/image' % property.id"
+                                                 t-att-alt="property.name"/>
+                                        </button>
+                                        <button type="button"
+                                                class="estate-gallery__view-all"
+                                                t-att-data-gallery-index="0"
+                                                aria-label="View all photos">
+                                            <i class="fa fa-th" aria-hidden="true"></i>
+                                            <span>View all photos</span>
+                                        </button>
+                                    </div>
                                 </t>
                                 <t t-else="">
                                     <div class="estate-gallery__placeholder" aria-label="No images available">
                                         <span class="text-muted">No images available</span>
                                     </div>
                                 </t>
-                                <t t-if="property.image_ids or property.image">
-                                    <button type="button" class="estate-gallery__hero-action" aria-label="Open image gallery">
-                                        <i class="fa fa-search-plus" aria-hidden="true"></i>
-                                    </button>
-                                </t>
                             </div>
-                            <t t-if="len(property.image_ids) &gt; 1">
-                                <div class="estate-gallery__thumbs" role="list">
-                                    <t t-foreach="property.image_ids" t-as="image" t-foreach-index="index">
-                                        <button type="button"
-                                                class="estate-gallery__thumb"
-                                                t-att-data-full-src="'/web/image/estate.property.image/%s/image_1920' % image.id"
-                                                t-att-aria-label="'View image %s' % ((index or 0) + 1)"
-                                                t-att-aria-current="'true' if (index or 0) == 0 else 'false'">
-                                            <img t-att-src="'/web/image/estate.property.image/%s/image_1920' % image.id"
-                                                 t-att-alt="image.name or property.name"/>
-                                        </button>
-                                    </t>
-                                </div>
-                            </t>
                         </div>
 
                         <div class="card shadow-sm mb-4 estate-detail-card">
@@ -290,25 +325,48 @@
                         </div>
 
                         <t t-set="has_features"
-                           t-value="property.bedrooms or property.bathrooms or property.living_area or property.lot_size"/>
+                           t-value="property.bedrooms or property.bathrooms or property.living_area or property.lot_size or property.garage is not None"/>
                         <t t-if="has_features">
-                            <div class="card shadow-sm mb-4 estate-detail-card">
+                            <div class="card shadow-sm mb-4 estate-detail-card estate-feature-card">
                                 <div class="card-body">
-                                    <h5 class="card-title">Features</h5>
-                                    <ul class="list-unstyled mb-0 estate-feature-list">
+                                    <h5 class="card-title">Key facts</h5>
+                                    <div class="estate-key-facts">
                                         <t t-if="property.bedrooms">
-                                            <li><strong>Bedrooms:</strong> <t t-esc="property.bedrooms"/></li>
+                                            <div class="estate-key-fact">
+                                                <span class="estate-key-fact__label">Bedrooms</span>
+                                                <span class="estate-key-fact__value"><t t-esc="property.bedrooms"/></span>
+                                            </div>
                                         </t>
                                         <t t-if="property.bathrooms">
-                                            <li><strong>Bathrooms:</strong> <t t-esc="property.bathrooms"/></li>
+                                            <div class="estate-key-fact">
+                                                <span class="estate-key-fact__label">Bathrooms</span>
+                                                <span class="estate-key-fact__value"><t t-esc="property.bathrooms"/></span>
+                                            </div>
                                         </t>
                                         <t t-if="property.living_area">
-                                            <li><strong>Living Area:</strong> <t t-esc="property.living_area"/> sqft</li>
+                                            <div class="estate-key-fact">
+                                                <span class="estate-key-fact__label">Living Area</span>
+                                                <span class="estate-key-fact__value">
+                                                    <t t-esc="property.living_area"/> sqft
+                                                </span>
+                                            </div>
                                         </t>
                                         <t t-if="property.lot_size">
-                                            <li><strong>Lot Size:</strong> <t t-esc="property.lot_size"/> sqft</li>
+                                            <div class="estate-key-fact">
+                                                <span class="estate-key-fact__label">Lot Size</span>
+                                                <span class="estate-key-fact__value"><t t-esc="property.lot_size"/> sqft</span>
+                                            </div>
                                         </t>
-                                    </ul>
+                                        <t t-if="property.garage is not None">
+                                            <div class="estate-key-fact">
+                                                <span class="estate-key-fact__label">Garage</span>
+                                                <span class="estate-key-fact__value">
+                                                    <t t-if="property.garage">Yes</t>
+                                                    <t t-else="">No</t>
+                                                </span>
+                                            </div>
+                                        </t>
+                                    </div>
                                 </div>
                             </div>
                         </t>

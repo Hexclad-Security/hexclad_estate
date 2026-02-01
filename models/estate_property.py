@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from odoo import api, fields, models
+from odoo.addons.http_routing.models.ir_http import slug
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools import float_compare, float_is_zero
 from dateutil.relativedelta import relativedelta
@@ -323,7 +324,7 @@ class EstateProperty(models.Model):
     @api.depends("name")
     def _compute_website_url(self):
         for record in self:
-            record.website_url = f"/properties/{record.id}"
+            record.website_url = f"/properties/{slug(record)}"
     
     # ----------------------------------------
     # Onchange Methods

@@ -127,6 +127,14 @@
     margin-top: 0.25rem;
 }
 
+@media (min-width: 992px) {
+    .estate-portal-sidebar {
+        position: sticky;
+        top: 1.5rem;
+        align-self: start;
+    }
+}
+
 .estate-gallery {
     overflow: hidden;
     border-radius: 14px;

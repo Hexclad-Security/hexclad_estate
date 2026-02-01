@@ -62,6 +62,10 @@ Built for RANCS Capital LLC.
         "web.assets_backend": [
             "hexclad_estate/static/src/css/estate_property.css",
         ],
+        "web.assets_frontend": [
+            "hexclad_estate/static/src/css/estate_property.css",
+            "hexclad_estate/static/src/js/estate_property_gallery.js",
+        ],
     },
     "post_init_hook": "post_init_hook",
     "installable": True,

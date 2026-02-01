@@ -1,11 +1,17 @@
 # -*- coding: utf-8 -*-
 
+import logging
+
+from markupsafe import Markup
 from werkzeug.exceptions import NotFound
 
 from odoo import http
 from odoo.http import request
 from odoo.tools import html_escape
 from odoo.tools.misc import formatLang
+
+
+_logger = logging.getLogger(__name__)
 
 
 class EstatePropertyWebsite(http.Controller):
@@ -134,7 +140,8 @@ class EstatePropertyWebsite(http.Controller):
             else "—"
         )
         message_html = html_escape(message or "—").replace("\n", "<br/>")
-        body = f"""
+        body = Markup(
+            f"""
             <p><strong>Website Inquiry</strong></p>
             <ul>
               <li><strong>Name:</strong> {_display(name)}</li>
@@ -147,6 +154,7 @@ class EstatePropertyWebsite(http.Controller):
             <p><strong>Message:</strong></p>
             <p>{message_html}</p>
         """
+        )
 
         salesperson_partner = (
             property.user_id.partner_id if property.user_id else False
@@ -217,7 +225,13 @@ class EstatePropertyWebsite(http.Controller):
                 or False,
                 "auto_delete": True,
             }
-            request.env["mail.mail"].sudo().create(mail_vals).send()
+            try:
+                request.env["mail.mail"].sudo().create(mail_vals).send()
+            except Exception:
+                _logger.exception(
+                    "Failed to send inquiry email to salesperson for property %s",
+                    property.id,
+                )
         return request.render(
             "hexclad_estate.estate_property_inquiry_thanks",
             {"property": property},

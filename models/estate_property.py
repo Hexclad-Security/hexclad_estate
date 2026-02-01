@@ -324,7 +324,7 @@ class EstateProperty(models.Model):
     @api.depends("name")
     def _compute_website_url(self):
         for record in self:
-            record.website_url = f"/properties/{slug(record)}"
+            record.website_url = f"/properties/{record.id}"
     
     # ----------------------------------------
     # Onchange Methods

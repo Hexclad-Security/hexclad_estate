@@ -185,11 +185,11 @@
                                         </t>
                                     </templates>
                                 </kanban>
-                                <tree editable="bottom">
+                                <list editable="bottom">
                                     <field name="sequence" widget="handle"/>
                                     <field name="name"/>
                                     <field name="image_1920" widget="image"/>
-                                </tree>
+                                </list>
                             </field>
                         </page>
                         <page string="Other Info" name="other">

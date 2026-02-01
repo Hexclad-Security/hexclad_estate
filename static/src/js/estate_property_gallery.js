@@ -19,20 +19,6 @@ const initGallery = () => {
         index: 0,
     };
 
-    const setHeroImage = (hero, src, index) => {
-        if (!hero || !src) {
-            return;
-        }
-        hero.src = src;
-        hero.dataset.index = String(index);
-    };
-
-    const syncThumbs = (thumbs, activeIndex) => {
-        thumbs.forEach((thumb, index) => {
-            thumb.setAttribute("aria-current", index === activeIndex ? "true" : "false");
-        });
-    };
-
     const toggleNav = () => {
         const isSingle = state.images.length <= 1;
         if (lightboxPrev) {
@@ -76,41 +62,39 @@ const initGallery = () => {
     };
 
     galleries.forEach((gallery) => {
-        const hero = gallery.querySelector(".estate-gallery__hero-image");
-        const heroAction = gallery.querySelector(".estate-gallery__hero-action");
-        const thumbs = Array.from(gallery.querySelectorAll(".estate-gallery__thumb"));
-
-        const images = thumbs
-            .map((thumb) => thumb.dataset.fullSrc || thumb.dataset.full)
-            .filter(Boolean);
-
-        if (!images.length && hero && hero.src) {
-            images.push(hero.src);
+        const triggers = Array.from(gallery.querySelectorAll("[data-gallery-index]"));
+        if (!triggers.length) {
+            return;
         }
 
-        thumbs.forEach((thumb, index) => {
-            thumb.addEventListener("click", () => {
-                const src = thumb.dataset.fullSrc || thumb.dataset.full;
-                setHeroImage(hero, src, index);
-                syncThumbs(thumbs, index);
-            });
+        const imagesByIndex = [];
+        triggers.forEach((trigger) => {
+            const index = Number(trigger.dataset.galleryIndex);
+            if (Number.isNaN(index)) {
+                return;
+            }
+            const src =
+                trigger.dataset.fullSrc ||
+                trigger.dataset.full ||
+                trigger.dataset.src ||
+                trigger.querySelector("img")?.src;
+            if (!src) {
+                return;
+            }
+            if (!imagesByIndex[index]) {
+                imagesByIndex[index] = src;
+            }
         });
 
-        if (hero && heroAction && images.length) {
-            const openHeroLightbox = () =>
-                openLightbox(Number(hero.dataset.index || 0), images);
-
-            heroAction.addEventListener("click", openHeroLightbox);
-            hero.addEventListener("click", openHeroLightbox);
-            hero.setAttribute("role", "button");
-            hero.setAttribute("tabindex", "0");
-            hero.addEventListener("keydown", (event) => {
-                if (event.key === "Enter" || event.key === " ") {
-                    event.preventDefault();
-                    openHeroLightbox();
-                }
-            });
+        const images = imagesByIndex.filter(Boolean);
+        if (!images.length) {
+            return;
         }
+
+        triggers.forEach((trigger) => {
+            const index = Number(trigger.dataset.galleryIndex || 0);
+            trigger.addEventListener("click", () => openLightbox(index, images));
+        });
     });
 
     if (lightbox) {

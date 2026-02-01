@@ -54,8 +54,7 @@
                     </div>
                     <div class="estate_website_listing d-flex flex-column align-items-start w-100">
                         <label for="website_published" string="Publish on Website" class="mb-0"/>
-                        <field name="website_published" widget="boolean_toggle" class="oe_inline mt-2" nolabel="1"
-                               help=""/>
+                        <field name="website_published" widget="boolean_toggle" class="oe_inline mt-1" nolabel="1"/>
                     </div>
                     <group>
                         <group string="Basic Info">

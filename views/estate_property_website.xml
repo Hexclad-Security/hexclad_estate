@@ -91,19 +91,136 @@
         <t t-call="website.layout">
             <t t-set="title" t-value="property.name"/>
             <div class="container my-5 estate-property-detail">
-                <nav aria-label="breadcrumb" class="mb-4">
-                    <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="/properties">Properties</a></li>
-                        <li class="breadcrumb-item active" aria-current="page">
-                            <t t-esc="property.name"/>
-                        </li>
-                    </ol>
-                </nav>
                 <t t-set="state_map" t-value="state_selection or {}"/>
                 <t t-set="address_parts"
                    t-value="[property.street or '', property.street2 or '', property.city or '', property.state_id.name if property.state_id else '', property.country_id.name if property.country_id else '', property.postcode or '']"/>
                 <div class="row g-4">
-                    <div class="col-lg-7">
+                    <div class="col-lg-4 estate-portal-sidebar">
+                        <div class="card shadow-sm mb-4 estate-detail-card estate-agent-card">
+                            <div class="card-body">
+                                <div class="estate-card-header">Agent / Sales Rep</div>
+                                <t t-set="agent_name" t-value="property.user_id.name or 'Assigned Agent'"/>
+                                <div class="d-flex align-items-center mb-3">
+                                    <div class="estate-agent-avatar me-3">
+                                        <t t-if="property.user_id and property.user_id.partner_id.image_128">
+                                            <img t-att-src="'/web/image/res.partner/%s/image_128' % property.user_id.partner_id.id"
+                                                 t-att-alt="agent_name"/>
+                                        </t>
+                                        <t t-else="">
+                                            <span class="estate-agent-placeholder">
+                                                <t t-esc="agent_name[:1]"/>
+                                            </span>
+                                        </t>
+                                    </div>
+                                    <div>
+                                        <div class="fw-semibold">
+                                            <t t-esc="agent_name"/>
+                                        </div>
+                                        <t t-if="property.user_id.partner_id.email">
+                                            <div class="text-muted">
+                                                <a t-att-href="'mailto:%s' % property.user_id.partner_id.email">
+                                                    <t t-esc="property.user_id.partner_id.email"/>
+                                                </a>
+                                            </div>
+                                        </t>
+                                        <t t-if="property.user_id.partner_id.phone">
+                                            <div class="text-muted">
+                                                <a t-att-href="'tel:%s' % property.user_id.partner_id.phone">
+                                                    <t t-esc="property.user_id.partner_id.phone"/>
+                                                </a>
+                                            </div>
+                                        </t>
+                                    </div>
+                                </div>
+                                <a href="#property-inquiry" class="btn btn-outline-primary w-100">
+                                    Contact Agent
+                                </a>
+                            </div>
+                        </div>
+
+                        <div class="card shadow-sm estate-detail-card">
+                            <div class="card-body">
+                                <div class="estate-card-header">Quick Actions</div>
+                                <a href="#property-inquiry" class="btn btn-primary w-100">Request Information</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-8">
+                        <nav aria-label="breadcrumb" class="mb-4">
+                            <ol class="breadcrumb">
+                                <li class="breadcrumb-item"><a href="/properties">Properties</a></li>
+                                <li class="breadcrumb-item active" aria-current="page">
+                                    <t t-esc="property.name"/>
+                                </li>
+                            </ol>
+                        </nav>
+                        <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-start mb-4">
+                            <div>
+                                <h1 class="mb-2"><t t-esc="property.name"/></h1>
+                                <div class="text-muted">
+                                    <t t-esc="property.property_type_id.name or ''"/>
+                                    <t t-if="property.city">
+                                        • <t t-esc="property.city"/>
+                                    </t>
+                                </div>
+                            </div>
+                            <span class="badge bg-secondary estate-status-badge mt-2 mt-md-0">
+                                <t t-esc="state_map.get(property.state, property.state)"/>
+                            </span>
+                        </div>
+
+                        <div class="card shadow-sm mb-4 estate-detail-card">
+                            <div class="card-body">
+                                <h5 class="card-title mb-3">Sale Information</h5>
+                                <div class="d-flex justify-content-between align-items-start mb-3">
+                                    <div>
+                                        <div class="text-muted">Asking Price</div>
+                                        <div class="estate-price">
+                                            <t t-esc="formatted_expected_price"/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <ul class="list-unstyled mb-0 estate-detail-list">
+                                    <li>
+                                        <span class="text-muted">Property Type</span>
+                                        <span class="fw-semibold"><t t-esc="property.property_type_id.name or '—'"/></span>
+                                    </li>
+                                    <li>
+                                        <span class="text-muted">Address</span>
+                                        <span class="fw-semibold">
+                                            <t t-esc="', '.join([part for part in address_parts if part]) or '—'"/>
+                                        </span>
+                                    </li>
+                                    <t t-if="property.date_availability">
+                                        <li>
+                                            <span class="text-muted">Available From</span>
+                                            <span class="fw-semibold">
+                                                <span t-field="property.date_availability"/>
+                                            </span>
+                                        </li>
+                                    </t>
+                                    <t t-if="formatted_best_price">
+                                        <li>
+                                            <span class="text-muted">Best Offer</span>
+                                            <span class="fw-semibold"><t t-esc="formatted_best_price"/></span>
+                                        </li>
+                                    </t>
+                                </ul>
+                                <t t-if="property.tag_ids">
+                                    <div class="mt-3">
+                                        <div class="text-muted mb-2">Tags</div>
+                                        <div class="d-flex flex-wrap gap-2">
+                                            <t t-foreach="property.tag_ids" t-as="tag">
+                                                <span class="badge rounded-pill text-bg-light estate-tag">
+                                                    <t t-esc="tag.name"/>
+                                                </span>
+                                            </t>
+                                        </div>
+                                    </div>
+                                </t>
+                            </div>
+                        </div>
+
                         <div class="card shadow-sm mb-4 estate-gallery" data-gallery="property">
                             <div class="estate-gallery__hero">
                                 <t t-if="property.image_ids">
@@ -159,7 +276,7 @@
                         <t t-set="has_features"
                            t-value="property.bedrooms or property.bathrooms or property.living_area or property.lot_size"/>
                         <t t-if="has_features">
-                            <div class="card shadow-sm estate-detail-card">
+                            <div class="card shadow-sm mb-4 estate-detail-card">
                                 <div class="card-body">
                                     <h5 class="card-title">Features</h5>
                                     <ul class="list-unstyled mb-0 estate-feature-list">
@@ -179,109 +296,8 @@
                                 </div>
                             </div>
                         </t>
-                    </div>
-                    <div class="col-lg-5">
-                        <div class="mb-4">
-                            <h1 class="mb-2"><t t-esc="property.name"/></h1>
-                            <p class="text-muted mb-0"><t t-esc="property.property_type_id.name or ''"/></p>
-                        </div>
 
-                        <div class="card shadow-sm mb-4 estate-detail-card">
-                            <div class="card-body">
-                                <div class="d-flex justify-content-between align-items-start mb-3">
-                                    <div>
-                                        <div class="text-muted">Asking Price</div>
-                                        <div class="estate-price">
-                                            <t t-esc="formatted_expected_price"/>
-                                        </div>
-                                    </div>
-                                    <span class="badge bg-secondary estate-status-badge">
-                                        <t t-esc="state_map.get(property.state, property.state)"/>
-                                    </span>
-                                </div>
-                                <ul class="list-unstyled mb-0 estate-detail-list">
-                                    <li>
-                                        <span class="text-muted">Property Type</span>
-                                        <span class="fw-semibold"><t t-esc="property.property_type_id.name or '—'"/></span>
-                                    </li>
-                                    <li>
-                                        <span class="text-muted">Address</span>
-                                        <span class="fw-semibold">
-                                            <t t-esc="', '.join([part for part in address_parts if part]) or '—'"/>
-                                        </span>
-                                    </li>
-                                    <t t-if="property.date_availability">
-                                        <li>
-                                            <span class="text-muted">Available From</span>
-                                            <span class="fw-semibold">
-                                                <span t-field="property.date_availability"/>
-                                            </span>
-                                        </li>
-                                    </t>
-                                    <t t-if="formatted_best_price">
-                                        <li>
-                                            <span class="text-muted">Best Offer</span>
-                                            <span class="fw-semibold"><t t-esc="formatted_best_price"/></span>
-                                        </li>
-                                    </t>
-                                </ul>
-                                <t t-if="property.tag_ids">
-                                    <div class="mt-3">
-                                        <div class="text-muted mb-2">Tags</div>
-                                        <div class="d-flex flex-wrap gap-2">
-                                            <t t-foreach="property.tag_ids" t-as="tag">
-                                                <span class="badge rounded-pill text-bg-light estate-tag">
-                                                    <t t-esc="tag.name"/>
-                                                </span>
-                                            </t>
-                                        </div>
-                                    </div>
-                                </t>
-                            </div>
-                        </div>
-
-                        <div class="card shadow-sm mb-4 estate-detail-card">
-                            <div class="card-body">
-                                <t t-set="agent_name" t-value="property.user_id.name or 'Assigned Agent'"/>
-                                <div class="d-flex align-items-center mb-3">
-                                    <div class="estate-agent-avatar me-3">
-                                        <t t-if="property.user_id and property.user_id.partner_id.image_128">
-                                            <img t-att-src="'/web/image/res.partner/%s/image_128' % property.user_id.partner_id.id"
-                                                 t-att-alt="agent_name"/>
-                                        </t>
-                                        <t t-else="">
-                                            <span class="estate-agent-placeholder">
-                                                <t t-esc="agent_name[:1]"/>
-                                            </span>
-                                        </t>
-                                    </div>
-                                    <div>
-                                        <div class="fw-semibold">
-                                            <t t-esc="agent_name"/>
-                                        </div>
-                                        <t t-if="property.user_id.partner_id.email">
-                                            <div class="text-muted">
-                                                <a t-att-href="'mailto:%s' % property.user_id.partner_id.email">
-                                                    <t t-esc="property.user_id.partner_id.email"/>
-                                                </a>
-                                            </div>
-                                        </t>
-                                        <t t-if="property.user_id.partner_id.phone">
-                                            <div class="text-muted">
-                                                <a t-att-href="'tel:%s' % property.user_id.partner_id.phone">
-                                                    <t t-esc="property.user_id.partner_id.phone"/>
-                                                </a>
-                                            </div>
-                                        </t>
-                                    </div>
-                                </div>
-                                <a href="#property-inquiry" class="btn btn-outline-primary w-100">
-                                    Contact Agent
-                                </a>
-                            </div>
-                        </div>
-
-                        <div class="card shadow-sm estate-detail-card" id="property-inquiry">
+                        <div class="card shadow-sm estate-detail-card estate-inquiry-card" id="property-inquiry">
                             <div class="card-body">
                                 <h5 class="card-title mb-3">Request More Information</h5>
                                 <form method="post" t-att-action="'/properties/%s/inquiry' % property.id">

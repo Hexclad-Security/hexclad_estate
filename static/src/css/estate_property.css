@@ -30,7 +30,7 @@
 }
 
 .estate_website_listing {
-    margin-bottom: 1rem;
+    margin-bottom: 0.5rem;
 }
 
 .estate_website_listing .estate_publish_help {
@@ -42,6 +42,15 @@
 .estate-property-detail .card {
     border: 1px solid #e7e9ef;
     border-radius: 12px;
+}
+
+.estate-card-header {
+    font-size: 0.75rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #6c757d;
+    margin-bottom: 0.75rem;
+    font-weight: 600;
 }
 
 .estate-detail-card .card-title {
@@ -104,6 +113,14 @@
 
 .estate-feature-list li + li {
     margin-top: 0.35rem;
+}
+
+.estate-inquiry-card .form-label {
+    font-weight: 500;
+}
+
+.estate-inquiry-card .form-control {
+    border-radius: 8px;
 }
 
 .estate-gallery {

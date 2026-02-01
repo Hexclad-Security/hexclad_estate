@@ -33,7 +33,7 @@
                                 type="object"
                                 class="oe_stat_button"
                                 icon="fa-globe"
-                                attrs="{'invisible': [('website_published', '=', False)]}">
+                                invisible="not website_published">
                             <div class="o_stat_info">
                                 <span class="o_stat_text">Go to Website</span>
                             </div>

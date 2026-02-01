@@ -440,3 +440,12 @@ class EstateProperty(models.Model):
             if stage_id:
                 record.stage_id = stage_id
         return True
+
+    def action_open_website(self):
+        """Open the website page for this property."""
+        self.ensure_one()
+        return {
+            "type": "ir.actions.act_url",
+            "url": self.website_url,
+            "target": "self",
+        }

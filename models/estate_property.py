@@ -2,7 +2,6 @@
 
 from odoo import api, fields, models
 from odoo.exceptions import UserError, ValidationError
-from odoo.addons.http_routing.models.ir_http import slug
 from odoo.tools import float_compare, float_is_zero
 from dateutil.relativedelta import relativedelta
 
@@ -441,3 +440,12 @@ class EstateProperty(models.Model):
             if stage_id:
                 record.stage_id = stage_id
         return True
+
+    def action_open_website(self):
+        """Open the website page for this property."""
+        self.ensure_one()
+        return {
+            "type": "ir.actions.act_url",
+            "url": self.website_url,
+            "target": "self",
+        }

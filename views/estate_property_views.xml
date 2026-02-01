@@ -33,7 +33,7 @@
                                 type="object"
                                 class="oe_stat_button"
                                 icon="fa-globe"
-                                attrs="{'invisible': [('website_published', '=', False)]}">
+                                invisible="not website_published">
                             <div class="o_stat_info">
                                 <span class="o_stat_text">Go to Website</span>
                             </div>
@@ -70,17 +70,6 @@
                             <group>
                                 <field name="description" placeholder="Describe the property..."/>
                             </group>
-                            <group string="Utilities">
-                                <group>
-                                    <field name="utility_ids" widget="many2many_tags"
-                                           options="{'color_field': 'color'}"
-                                           placeholder="Add utilities..."/>
-                                </group>
-                                <group>
-                                    <field name="survey_complete"/>
-                                    <field name="flood_zone"/>
-                                </group>
-                            </group>
                             <group string="Address">
                                 <group>
                                     <field name="street"/>
@@ -112,17 +101,6 @@
                                     <field name="garden_area" invisible="not garden"/>
                                     <field name="garden_orientation" invisible="not garden"/>
                                     <field name="total_area"/>
-                                </group>
-                            </group>
-                            <group string="Utilities">
-                                <group>
-                                    <field name="utility_ids" widget="many2many_tags"
-                                           options="{'color_field': 'color'}"
-                                           placeholder="Add utilities..."/>
-                                </group>
-                                <group>
-                                    <field name="survey_complete"/>
-                                    <field name="flood_zone"/>
                                 </group>
                             </group>
                         </page>
@@ -168,7 +146,7 @@
                             </field>
                         </page>
                         <page string="Images" name="images">
-                            <field name="image_ids" mode="kanban,tree" context="{'default_property_id': active_id}">
+                            <field name="image_ids" mode="kanban,tree" context="{'default_property_id': id}">
                                 <kanban class="o_kanban_small_column">
                                     <field name="image_1920"/>
                                     <field name="name"/>
@@ -185,11 +163,11 @@
                                         </t>
                                     </templates>
                                 </kanban>
-                                <tree editable="bottom">
+                                <list editable="bottom">
                                     <field name="sequence" widget="handle"/>
                                     <field name="name"/>
                                     <field name="image_1920" widget="image"/>
-                                </tree>
+                                </list>
                             </field>
                         </page>
                         <page string="Other Info" name="other">

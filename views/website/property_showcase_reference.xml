@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="estate_property_showcase_reference" name="Property Showcase Reference">
+        <t t-call="website.layout">
+            <t t-set="title" t-value="'Property Showcase Reference'"/>
+            <div class="container my-5 estate-showcase">
+                <div class="mb-4">
+                    <span class="estate-showcase__pill">Reference Layout</span>
+                    <h1 class="mt-3">Property Showcase Layout</h1>
+                    <p class="estate-showcase__muted">
+                        This template mirrors the design reference structure and is intended for future integration.
+                    </p>
+                </div>
+                <div class="row g-4">
+                    <div class="col-lg-8">
+                        <div class="estate-showcase__card p-4 mb-4">
+                            <h2 class="h4 mb-2">Hero Gallery</h2>
+                            <img class="img-fluid rounded" t-att-src="'/hexclad_estate/static/src/img/property-placeholder.svg'" alt="Property placeholder"/>
+                        </div>
+                        <div class="estate-showcase__card p-4 mb-4">
+                            <h2 class="h4 mb-2">About</h2>
+                            <p class="estate-showcase__muted">Add property description, highlights, and feature groups here.</p>
+                        </div>
+                    </div>
+                    <div class="col-lg-4">
+                        <div class="estate-showcase__card p-4">
+                            <h2 class="h4 mb-3">Price &amp; Actions</h2>
+                            <button class="estate-showcase__cta w-100 mb-2" type="button">Schedule Tour</button>
+                            <button class="estate-showcase__cta estate-showcase__cta--ghost w-100" type="button">Request Info</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+</odoo>

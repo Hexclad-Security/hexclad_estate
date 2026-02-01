@@ -273,7 +273,7 @@
                                     </div>
                                     <div class="estate-gallery__mosaic-grid">
                                         <t t-foreach="property.image_ids" t-as="image" t-foreach-index="index">
-                                            <t t-if="index &gt; 0 and index &lt; 5">
+                                            <t t-if="(index or 0) &gt; 0 and (index or 0) &lt; 5">
                                                 <button type="button"
                                                         class="estate-gallery__mosaic-item"
                                                         t-att-data-gallery-index="index"

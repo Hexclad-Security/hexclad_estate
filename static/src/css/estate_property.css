@@ -69,6 +69,11 @@
     color: #0f172a;
 }
 
+.estate-price-card .btn {
+    border-radius: 10px;
+    font-weight: 600;
+}
+
 .estate-status-badge {
     font-size: 0.8rem;
     text-transform: uppercase;
@@ -92,6 +97,16 @@
 .estate-tag {
     border: 1px solid #e2e8f0;
     color: #334155;
+}
+
+.estate-pill {
+    padding: 0.35rem 0.75rem;
+    font-weight: 500;
+    background: #f8fafc;
+}
+
+.estate-pill-list {
+    gap: 0.5rem;
 }
 
 .estate-agent-avatar {
@@ -146,33 +161,69 @@
     border-radius: 14px;
 }
 
-.estate-gallery__hero {
-    position: relative;
+.estate-gallery__mosaic {
+    display: grid;
+    grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+    gap: 0.75rem;
+    padding: 1rem;
     background: #f8fafc;
 }
 
-.estate-gallery__hero-image {
-    width: 100%;
+.estate-gallery__mosaic-main {
+    position: relative;
     height: 420px;
-    object-fit: cover;
-    display: block;
-    cursor: pointer;
 }
 
-.estate-gallery__hero-action {
-    position: absolute;
-    right: 1rem;
-    bottom: 1rem;
+.estate-gallery__mosaic-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.75rem;
+    height: 420px;
+}
+
+.estate-gallery__mosaic-item {
     border: none;
-    background: rgba(15, 23, 42, 0.7);
+    padding: 0;
+    border-radius: 14px;
+    overflow: hidden;
+    background: transparent;
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+    position: relative;
+}
+
+.estate-gallery__mosaic-grid .estate-gallery__mosaic-item {
+    height: calc((420px - 0.75rem) / 2);
+}
+
+.estate-gallery__mosaic-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.estate-gallery__view-all {
+    position: absolute;
+    left: 1rem;
+    bottom: 1rem;
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    background: rgba(15, 23, 42, 0.75);
     color: #fff;
     border-radius: 999px;
-    width: 42px;
-    height: 42px;
-    display: flex;
+    padding: 0.45rem 0.9rem;
+    display: inline-flex;
     align-items: center;
-    justify-content: center;
-    cursor: pointer;
+    gap: 0.5rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+    backdrop-filter: blur(6px);
+}
+
+.estate-gallery__view-count {
+    opacity: 0.75;
+    font-weight: 500;
 }
 
 .estate-gallery__placeholder {
@@ -182,35 +233,39 @@
     justify-content: center;
 }
 
-.estate-gallery__thumbs {
-    display: flex;
+.estate-feature-card {
+    border-color: #d7dee7;
+}
+
+.estate-key-facts {
+    margin-top: 1rem;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
     gap: 0.75rem;
-    padding: 1rem;
-    overflow-x: auto;
-    background: #fff;
 }
 
-.estate-gallery__thumb {
-    border: 2px solid transparent;
-    padding: 0;
-    border-radius: 8px;
-    background: transparent;
-    flex: 0 0 auto;
-    width: 88px;
-    height: 64px;
-    overflow: hidden;
-    cursor: pointer;
+.estate-key-fact {
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 0.75rem 1rem;
+    background: #f8fafc;
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
 }
 
-.estate-gallery__thumb img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: block;
+.estate-key-fact__label {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #6c757d;
+    font-weight: 600;
 }
 
-.estate-gallery__thumb[aria-current="true"] {
-    border-color: #2563eb;
+.estate-key-fact__value {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #0f172a;
 }
 
 .estate-lightbox {
@@ -288,7 +343,7 @@
 }
 
 @media (max-width: 992px) {
-    .estate-gallery__hero-image,
+    .estate-gallery__mosaic-main,
     .estate-gallery__placeholder {
         height: 320px;
     }
@@ -296,11 +351,39 @@
     .estate-lightbox__nav {
         display: none;
     }
+
+    .estate-gallery__mosaic {
+        grid-template-columns: 1fr;
+    }
+
+    .estate-gallery__mosaic-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        height: auto;
+    }
+
+    .estate-gallery__mosaic-grid .estate-gallery__mosaic-item {
+        height: 140px;
+    }
 }
 
 @media (max-width: 576px) {
-    .estate-gallery__hero-action {
-        right: 0.75rem;
-        bottom: 0.75rem;
+    .estate-gallery__mosaic {
+        padding: 0.75rem;
+    }
+
+    .estate-gallery__mosaic-main {
+        height: 240px;
+    }
+
+    .estate-gallery__mosaic-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .estate-gallery__mosaic-grid .estate-gallery__mosaic-item {
+        height: 110px;
+    }
+
+    .estate-lightbox__nav {
+        display: none;
     }
 }

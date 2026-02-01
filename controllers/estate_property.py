@@ -214,15 +214,17 @@ class EstatePropertyWebsite(http.Controller):
             )
 
         salesperson_email = salesperson_partner.email if salesperson_partner else False
+        sender_email = (
+            property.company_id.email or request.env.company.email or email or False
+        )
         if salesperson_email:
             mail_vals = {
                 "subject": f"New website inquiry: {property.name}",
                 "body_html": body,
                 "email_to": salesperson_email,
-                "email_from": property.company_id.email
-                or request.env.company.email
-                or email
-                or False,
+                "email_from": (
+                    f"Notifications <{sender_email}>" if sender_email else False
+                ),
                 "auto_delete": True,
             }
             try:

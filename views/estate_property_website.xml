@@ -135,8 +135,8 @@
                                         <button type="button"
                                                 class="estate-gallery__thumb"
                                                 t-att-data-full="'/web/image/estate.property.image/%s/image_1920' % image.id"
-                                                t-att-aria-label="'View image %s' % (index + 1)"
-                                                t-att-aria-current="'true' if index == 0 else 'false'">
+                                                t-att-aria-label="'View image %s' % ((index or 0) + 1)"
+                                                t-att-aria-current="'true' if (index or 0) == 0 else 'false'">
                                             <img t-att-src="'/web/image/estate.property.image/%s/image_1920' % image.id"
                                                  t-att-alt="image.name or property.name"/>
                                         </button>

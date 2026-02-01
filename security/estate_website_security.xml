@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="estate_property_public_rule" model="ir.rule">
+        <field name="name">Estate Property: public published only</field>
+        <field name="model_id" ref="model_estate_property"/>
+        <field name="domain_force">[("website_published", "=", True), ("active", "=", True)]</field>
+        <field name="groups" eval="[(4, ref('base.group_public')), (4, ref('base.group_portal'))]"/>
+    </record>
+
+    <record id="estate_property_image_public_rule" model="ir.rule">
+        <field name="name">Estate Property Image: public published only</field>
+        <field name="model_id" ref="model_estate_property_image"/>
+        <field name="domain_force">[("property_id.website_published", "=", True), ("property_id.active", "=", True)]</field>
+        <field name="groups" eval="[(4, ref('base.group_public')), (4, ref('base.group_portal'))]"/>
+    </record>
+</odoo>

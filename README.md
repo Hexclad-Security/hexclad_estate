@@ -83,13 +83,64 @@ hexclad_estate/
 - `base` - Core Odoo
 - `web` - Web interface
 - `mail` - For chatter/activity tracking
+- `website` - Public website publishing and routing
 
 **No Enterprise or paid modules required!**
+
+## Website Listings (Publish/Unpublish + Public Pages)
+
+This module already ships a public listings page and detail page:
+
+- **Listings:** `/properties`
+- **Detail:** `/properties/<slug>`
+
+### 1) Set up the page in Website
+
+1. Ensure the **Website** app is installed (dependency is already in `__manifest__.py`).
+2. Go to **Website → Configuration → Menus** and add a menu item:
+   - **Name:** Properties
+   - **URL:** `/properties`
+3. (Optional) Use Website → Edit to add static content blocks above or below the listing by inheriting the
+   `estate_property_listing` template in `views/estate_property_website.xml`.
+
+### 2) Publish/Unpublish a property safely
+
+Each property uses `website.published.mixin`, so the **Publish/Unpublish** button on the form controls
+`website_published`. The public site will only show properties that are:
+
+- `website_published = True`
+- `active = True`
+
+This check is enforced in **both**:
+
+- the website controllers (`controllers/estate_property.py`), and
+- record rules for public/portal users (`security/estate_website_security.xml`).
+
+### 3) URL + SEO-friendly slug (Sales-style)
+
+Like Sales/Website Sale, we compute `website_url` with a slug, so URLs look like:
+
+```
+/properties/123-modern-4br-in-dallas
+```
+
+This is handled by `_compute_website_url` in `models/estate_property.py` using Odoo’s `slug()` helper.
+
+### 4) Safe, standards-aligned public access
+
+- **Routing:** `/properties` and `/properties/<model>` are public routes that only render published records.
+- **CSRF protection:** inquiry POSTs include `csrf_token` and the route enforces `csrf=True`.
+- **Access control:** record rules block public users from seeing unpublished/inactive data.
+
+If you want to hide sold/canceled listings, add a state filter to the controller domain:
+
+```
+domain += [("state", "not in", ("sold", "canceled"))]
+```
 
 ## Future Enhancements
 
 This module provides a solid foundation. Planned additions:
-- Website frontend for public property listings
 - n8n webhook integrations for automated workflows
 - PDF reports for property analysis
 - Lead management integration

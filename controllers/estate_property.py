@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 
-from markupsafe import Markup, escape
 from werkzeug.exceptions import NotFound
 
 from odoo import http
@@ -99,7 +98,7 @@ class EstatePropertyWebsite(http.Controller):
             "Message:",
             message or "-",
         ]
-        body = Markup("<br/>").join(escape(line) for line in message_lines)
+        body = "\n".join(message_lines)
         property.sudo().message_post(
             body=body,
             message_type="comment",

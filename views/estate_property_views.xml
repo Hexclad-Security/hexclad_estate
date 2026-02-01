@@ -52,9 +52,11 @@
                                    placeholder="Add tags..."/>
                         </div>
                     </div>
-                    <group string="Website Listing" class="estate_website_listing" col="2">
-                        <label for="website_published" string="Publish on Website" class="mb-0"/>
-                        <field name="website_published" widget="boolean_toggle" class="oe_inline"/>
+                    <group string="Website Listing" class="estate_website_listing">
+                        <div class="d-flex justify-content-between align-items-center w-100">
+                            <label for="website_published" string="Publish on Website" class="mb-0"/>
+                            <field name="website_published" widget="boolean_toggle" class="oe_inline" nolabel="1"/>
+                        </div>
                     </group>
                     <group>
                         <group string="Basic Info">

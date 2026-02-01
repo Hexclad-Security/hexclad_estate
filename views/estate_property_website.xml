@@ -108,12 +108,14 @@
                             <div class="estate-gallery__hero">
                                 <t t-if="property.image_ids">
                                     <img class="estate-gallery__hero-image"
+                                         id="estateHeroImage"
                                          t-att-src="'/web/image/estate.property.image/%s/image_1920' % property.image_ids[0].id"
                                          t-att-alt="property.image_ids[0].name or property.name"
                                          t-att-data-index="0"/>
                                 </t>
                                 <t t-elif="property.image">
                                     <img class="estate-gallery__hero-image"
+                                         id="estateHeroImage"
                                          t-att-src="'/web/image/estate.property/%s/image' % property.id"
                                          t-att-alt="property.name"
                                          t-att-data-index="0"/>
@@ -134,7 +136,7 @@
                                     <t t-foreach="property.image_ids" t-as="image" t-foreach-index="index">
                                         <button type="button"
                                                 class="estate-gallery__thumb"
-                                                t-att-data-full="'/web/image/estate.property.image/%s/image_1920' % image.id"
+                                                t-att-data-full-src="'/web/image/estate.property.image/%s/image_1920' % image.id"
                                                 t-att-aria-label="'View image %s' % ((index or 0) + 1)"
                                                 t-att-aria-current="'true' if (index or 0) == 0 else 'false'">
                                             <img t-att-src="'/web/image/estate.property.image/%s/image_1920' % image.id"
@@ -214,18 +216,6 @@
                                             <span class="fw-semibold">
                                                 <span t-field="property.date_availability"/>
                                             </span>
-                                        </li>
-                                    </t>
-                                    <li>
-                                        <span class="text-muted">Created</span>
-                                        <span class="fw-semibold">
-                                            <span t-field="property.create_date"/>
-                                        </span>
-                                    </li>
-                                    <t t-if="property.company_id">
-                                        <li>
-                                            <span class="text-muted">Company</span>
-                                            <span class="fw-semibold"><t t-esc="property.company_id.name"/></span>
                                         </li>
                                     </t>
                                     <t t-if="formatted_best_price">

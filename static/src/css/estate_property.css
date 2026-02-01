@@ -63,9 +63,11 @@
 .estate-detail-list li {
     display: flex;
     justify-content: space-between;
+    align-items: center;
     gap: 1rem;
-    padding: 0.35rem 0;
-    border-bottom: 1px dashed #e7e9ef;
+    padding: 0.4rem 0;
+    border-bottom: 1px solid #e7e9ef;
+    font-size: 0.95rem;
 }
 
 .estate-detail-list li:last-child {
@@ -135,6 +137,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    cursor: pointer;
 }
 
 .estate-gallery__placeholder {
@@ -161,6 +164,7 @@
     width: 88px;
     height: 64px;
     overflow: hidden;
+    cursor: pointer;
 }
 
 .estate-gallery__thumb img {
@@ -230,6 +234,10 @@
     width: 44px;
     height: 44px;
     border-radius: 50%;
+}
+
+.estate-lightbox__nav.is-hidden {
+    display: none;
 }
 
 .estate-lightbox__prev {

@@ -52,12 +52,10 @@
                                    placeholder="Add tags..."/>
                         </div>
                     </div>
-                    <group string="Website Listing" class="estate_website_listing">
-                        <div class="d-flex justify-content-between align-items-center w-100">
-                            <label for="website_published" string="Publish on Website" class="mb-0"/>
-                            <field name="website_published" widget="boolean_toggle" class="oe_inline" nolabel="1"/>
-                        </div>
-                    </group>
+                    <div class="estate_website_listing d-flex justify-content-between align-items-center w-100">
+                        <label for="website_published" string="Publish on Website" class="mb-0"/>
+                        <field name="website_published" widget="boolean_toggle" class="oe_inline" nolabel="1"/>
+                    </div>
                     <group>
                         <group string="Basic Info">
                             <field name="property_type_id" options="{'no_create': True}"/>

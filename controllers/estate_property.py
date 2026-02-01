@@ -90,47 +90,16 @@ class EstatePropertyWebsite(http.Controller):
             if base_url and property.website_url
             else ""
         )
-        name_safe = escape(name)
-        message_safe = escape(message).replace("\n", "<br/>") or "-"
-        email_safe = escape(email)
-        phone_safe = escape(phone)
-        email_html = (
-            Markup('<a href="mailto:{0}">{0}</a>').format(email_safe)
-            if email_safe
-            else "—"
-        )
-        phone_html = (
-            Markup('<a href="tel:{0}">{0}</a>').format(phone_safe)
-            if phone_safe
-            else "—"
-        )
-        url_html = (
-            Markup('<a href="{0}" target="_blank" rel="noopener">{0}</a>').format(
-                escape(property_url)
-            )
-            if property_url
-            else "—"
-        )
-        body = Markup(
-            """
-<div>
-    <p><strong>Website inquiry</strong></p>
-    <ul>
-        <li><strong>Name:</strong> {name}</li>
-        <li><strong>Email:</strong> {email}</li>
-        <li><strong>Phone:</strong> {phone}</li>
-        <li><strong>Property URL:</strong> {url}</li>
-    </ul>
-    <div><strong>Message:</strong><br/>{message}</div>
-</div>
-"""
-        ).format(
-            name=name_safe,
-            email=email_html,
-            phone=phone_html,
-            url=url_html,
-            message=message_safe,
-        )
+        message_lines = [
+            "Website Inquiry",
+            f"Name: {name or '—'}",
+            f"Email: {email or '—'}",
+            f"Phone: {phone or '—'}",
+            f"Property URL: {property_url or '—'}",
+            "Message:",
+            message or "-",
+        ]
+        body = Markup("<br/>").join(escape(line) for line in message_lines)
         property.sudo().message_post(
             body=body,
             message_type="comment",

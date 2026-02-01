@@ -2,10 +2,10 @@
 
 import publicWidget from "@web/legacy/js/public/public_widget";
 
-publicWidget.registry.HexEstateGallery = publicWidget.Widget.extend({
+publicWidget.registry.HexPropertyGallery = publicWidget.Widget.extend({
     selector: ".hex-estate-property-page",
     events: {
-        "click .estate-gallery [data-hex-gallery-index]": "_onGalleryClick",
+        "click .hex-property-thumb": "_onGalleryClick",
     },
 
     start() {
@@ -15,7 +15,7 @@ publicWidget.registry.HexEstateGallery = publicWidget.Widget.extend({
     },
 
     _onGalleryClick(event) {
-        const index = Number(event.currentTarget.dataset.hexGalleryIndex || 0);
+        const index = Number(event.currentTarget.dataset.index || 0);
         if (!this.$carousel.length || Number.isNaN(index)) {
             return;
         }

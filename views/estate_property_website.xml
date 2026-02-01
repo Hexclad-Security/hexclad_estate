@@ -101,7 +101,7 @@
                 </nav>
                 <t t-set="state_map" t-value="state_selection or {}"/>
                 <t t-set="address_parts"
-                   t-value="[property.street, property.street2, property.city, property.state_id.name if property.state_id else False, property.country_id.name if property.country_id else False, property.zip]"/>
+                   t-value="[property.street or '', property.street2 or '', property.city or '', property.state_id.name if property.state_id else '', property.country_id.name if property.country_id else '', property.postcode or '']"/>
                 <div class="row g-4">
                     <div class="col-lg-7">
                         <div class="card shadow-sm mb-4 estate-gallery" data-gallery="property">

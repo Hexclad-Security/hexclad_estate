@@ -2,6 +2,7 @@
 
 from odoo import api, fields, models
 from odoo.exceptions import UserError, ValidationError
+from odoo.addons.http_routing.models.ir_http import slug
 from odoo.tools import float_compare, float_is_zero
 from dateutil.relativedelta import relativedelta
 
@@ -30,7 +31,7 @@ class EstateProperty(models.Model):
     _name = "estate.property"
     _description = "Real Estate Property"
     _order = "id desc"
-    _inherit = ["mail.thread", "mail.activity.mixin"]  # Enable chatter
+    _inherit = ["mail.thread", "mail.activity.mixin", "website.published.mixin"]  # Enable chatter
     
     _sql_constraints = [
         (
@@ -262,6 +263,11 @@ class EstateProperty(models.Model):
     
     # Images
     image = fields.Image(string="Main Image", max_width=1920, max_height=1920)
+    image_ids = fields.One2many(
+        "estate.property.image",
+        "property_id",
+        string="Images",
+    )
 
     # Utilities & Risk
     survey_complete = fields.Boolean(string="Survey Complete")
@@ -314,6 +320,11 @@ class EstateProperty(models.Model):
                 record.cap_rate = (noi / record.purchase_price) * 100
             else:
                 record.cap_rate = 0.0
+
+    @api.depends("name")
+    def _compute_website_url(self):
+        for record in self:
+            record.website_url = f"/properties/{slug(record)}"
     
     # ----------------------------------------
     # Onchange Methods

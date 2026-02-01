@@ -123,6 +123,10 @@
     border-radius: 8px;
 }
 
+.estate-portal-sidebar .estate-inquiry-card .btn {
+    margin-top: 0.25rem;
+}
+
 .estate-gallery {
     overflow: hidden;
     border-radius: 14px;

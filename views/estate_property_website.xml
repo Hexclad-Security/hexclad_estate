@@ -132,16 +132,32 @@
                                         </t>
                                     </div>
                                 </div>
-                                <a href="#property-inquiry" class="btn btn-outline-primary w-100">
-                                    Contact Agent
-                                </a>
                             </div>
                         </div>
 
-                        <div class="card shadow-sm estate-detail-card">
+                        <div class="card shadow-sm mb-4 estate-detail-card estate-inquiry-card" id="property-inquiry">
                             <div class="card-body">
-                                <div class="estate-card-header">Quick Actions</div>
-                                <a href="#property-inquiry" class="btn btn-primary w-100">Request Information</a>
+                                <div class="estate-card-header">Request More Information</div>
+                                <form method="post" t-att-action="'/properties/%s/inquiry' % property.id">
+                                    <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                                    <div class="mb-3">
+                                        <label class="form-label">Name</label>
+                                        <input type="text" name="name" class="form-control" required="required"/>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Email</label>
+                                        <input type="email" name="email" class="form-control" required="required"/>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Phone</label>
+                                        <input type="text" name="phone" class="form-control"/>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Message</label>
+                                        <textarea name="message" class="form-control" rows="3"></textarea>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary w-100">Send Inquiry</button>
+                                </form>
                             </div>
                         </div>
                     </div>
@@ -297,31 +313,6 @@
                             </div>
                         </t>
 
-                        <div class="card shadow-sm estate-detail-card estate-inquiry-card" id="property-inquiry">
-                            <div class="card-body">
-                                <h5 class="card-title mb-3">Request More Information</h5>
-                                <form method="post" t-att-action="'/properties/%s/inquiry' % property.id">
-                                    <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
-                                    <div class="mb-3">
-                                        <label class="form-label">Name</label>
-                                        <input type="text" name="name" class="form-control" required="required"/>
-                                    </div>
-                                    <div class="mb-3">
-                                        <label class="form-label">Email</label>
-                                        <input type="email" name="email" class="form-control" required="required"/>
-                                    </div>
-                                    <div class="mb-3">
-                                        <label class="form-label">Phone</label>
-                                        <input type="text" name="phone" class="form-control"/>
-                                    </div>
-                                    <div class="mb-3">
-                                        <label class="form-label">Message</label>
-                                        <textarea name="message" class="form-control" rows="3"></textarea>
-                                    </div>
-                                    <button type="submit" class="btn btn-primary w-100">Send Inquiry</button>
-                                </form>
-                            </div>
-                        </div>
                     </div>
                 </div>
                 <div class="estate-lightbox" aria-hidden="true" role="dialog" aria-modal="true">

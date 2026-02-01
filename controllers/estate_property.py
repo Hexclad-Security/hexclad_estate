@@ -84,51 +84,23 @@ class EstatePropertyWebsite(http.Controller):
         email = post.get("email") or ""
         phone = post.get("phone") or ""
         message = post.get("message") or ""
-        base_url = request.env["ir.config_parameter"].sudo().get_param("web.base.url")
-        property_url = (
-            f"{base_url}{property.website_url}"
-            if base_url and property.website_url
-            else ""
-        )
         name_safe = escape(name)
         message_safe = escape(message).replace("\n", "<br/>") or "-"
         email_safe = escape(email)
         phone_safe = escape(phone)
-        email_html = (
-            Markup('<a href="mailto:{0}">{0}</a>').format(email_safe)
-            if email_safe
-            else "—"
-        )
-        phone_html = (
-            Markup('<a href="tel:{0}">{0}</a>').format(phone_safe)
-            if phone_safe
-            else "—"
-        )
-        url_html = (
-            Markup('<a href="{0}" target="_blank" rel="noopener">{0}</a>').format(
-                escape(property_url)
-            )
-            if property_url
-            else "—"
-        )
+        email_display = email_safe or "—"
+        phone_display = phone_safe or "—"
         body = Markup(
-            """
-<div>
-    <p><strong>Website inquiry</strong></p>
-    <ul>
-        <li><strong>Name:</strong> {name}</li>
-        <li><strong>Email:</strong> {email}</li>
-        <li><strong>Phone:</strong> {phone}</li>
-        <li><strong>Property URL:</strong> {url}</li>
-    </ul>
-    <div><strong>Message:</strong><br/>{message}</div>
-</div>
-"""
+            "Website Inquiry<br/>"
+            "Name: {name}<br/>"
+            "Email: {email}<br/>"
+            "Phone: {phone}<br/>"
+            "Message:<br/>"
+            "{message}"
         ).format(
             name=name_safe,
-            email=email_html,
-            phone=phone_html,
-            url=url_html,
+            email=email_display,
+            phone=phone_display,
             message=message_safe,
         )
         property.sudo().message_post(

@@ -53,12 +53,12 @@
                         </div>
                     </div>
                     <group string="Website Listing" class="estate_website_listing">
-                        <div class="o_row">
+                        <div class="o_row align-items-center">
                             <div class="o_col-8">
                                 <label for="website_published" string="Publish on Website"/>
                             </div>
                             <div class="o_col-4 text-end">
-                                <field name="website_published" widget="boolean_toggle"/>
+                                <field name="website_published" widget="boolean_toggle" class="oe_inline"/>
                             </div>
                         </div>
                     </group>

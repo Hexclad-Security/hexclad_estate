@@ -33,6 +33,12 @@
     margin-bottom: 0.5rem;
 }
 
+.estate_website_listing .o_form_text,
+.estate_website_listing .o_form_label_help,
+.estate_website_listing .o_field_help {
+    display: none;
+}
+
 .estate_website_listing .estate_publish_help {
     margin-top: 0.25rem;
     line-height: 1.4;

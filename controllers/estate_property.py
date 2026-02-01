@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 
-from markupsafe import Markup, escape
 from werkzeug.exceptions import NotFound
 
 from odoo import http
@@ -9,9 +8,14 @@ from odoo.tools.misc import formatLang
 
 
 class EstatePropertyWebsite(http.Controller):
+    def _get_property_model(self):
+        if "estate.property" not in request.env.registry.models:
+            raise NotFound()
+        return request.env["estate.property"].sudo()
+
     @http.route(["/properties"], type="http", auth="public", website=True, sitemap=True)
     def properties(self, type_id=None, state=None, **kwargs):
-        Property = request.env["estate.property"].sudo()
+        Property = self._get_property_model()
         domain = [("website_published", "=", True), ("active", "=", True)]
         selected_type_id = False
         if type_id:
@@ -42,6 +46,7 @@ class EstatePropertyWebsite(http.Controller):
         sitemap=True,
     )
     def property_detail(self, property, **kwargs):
+        self._get_property_model()
         if not property.website_published or not property.active:
             raise NotFound()
         currency = (
@@ -78,6 +83,7 @@ class EstatePropertyWebsite(http.Controller):
         csrf=True,
     )
     def property_inquiry(self, property, **post):
+        self._get_property_model()
         if not property.website_published or not property.active:
             raise NotFound()
         name = post.get("name") or "Website Visitor"
@@ -99,7 +105,7 @@ class EstatePropertyWebsite(http.Controller):
             "Message:",
             message or "-",
         ]
-        body = Markup("<br/>").join(escape(line) for line in message_lines)
+        body = "\n".join(message_lines)
         property.sudo().message_post(
             body=body,
             message_type="comment",

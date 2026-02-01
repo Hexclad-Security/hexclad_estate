@@ -1,10 +1,25 @@
 # -*- coding: utf-8 -*-
 
 from odoo import api, fields, models
-from odoo.addons.http_routing.models.ir_http import IrHttp
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools import float_compare, float_is_zero
 from dateutil.relativedelta import relativedelta
+import re
+import unicodedata
+
+
+def _slugify(value):
+    value = value or ""
+    value = unicodedata.normalize("NFKD", value)
+    value = value.encode("ascii", "ignore").decode("ascii")
+    value = re.sub(r"[^\w\s-]", "", value).strip().lower()
+    value = re.sub(r"[-\s]+", "-", value)
+    return value or "listing"
+
+
+def _record_slug(record):
+    slugname = _slugify(record.name)
+    return f"{slugname}-{record.id}" if record.id else slugname
 
 
 STATE_STAGE_XML_IDS = {
@@ -324,7 +339,7 @@ class EstateProperty(models.Model):
     @api.depends("name")
     def _compute_website_url(self):
         for record in self:
-            record.website_url = f"/properties/{IrHttp._slug(record)}"
+            record.website_url = f"/properties/{_record_slug(record)}"
     
     # ----------------------------------------
     # Onchange Methods

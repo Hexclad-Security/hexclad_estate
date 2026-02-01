@@ -53,6 +53,7 @@ Built for RANCS Capital LLC.
         "views/estate_property_views.xml",
         "views/res_users_views.xml",
         "views/estate_property_website.xml",
+        "views/website/property_showcase_reference.xml",
         "views/estate_menus.xml",
     ],
     "demo": [
@@ -64,6 +65,7 @@ Built for RANCS Capital LLC.
         ],
         "web.assets_frontend": [
             "hexclad_estate/static/src/css/estate_property.css",
+            "hexclad_estate/static/src/scss/property_showcase.scss",
             "hexclad_estate/static/src/js/estate_property_gallery.js",
         ],
     },

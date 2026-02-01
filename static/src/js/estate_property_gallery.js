@@ -6,8 +6,6 @@ const initGallery = () => {
         return;
     }
 
-    console.log("estate gallery loaded");
-
     const lightbox = document.querySelector(".estate-lightbox");
     const lightboxImage = lightbox ? lightbox.querySelector(".estate-lightbox__image") : null;
     const lightboxClose = lightbox ? lightbox.querySelector(".estate-lightbox__close") : null;

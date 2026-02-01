@@ -90,289 +90,379 @@
     <template id="estate_property_detail" name="Property Detail">
         <t t-call="website.layout">
             <t t-set="title" t-value="property.name"/>
-            <div class="container my-5 estate-property-detail">
-                <t t-set="state_map" t-value="state_selection or {}"/>
-                <t t-set="address_parts"
-                   t-value="[property.street or '', property.street2 or '', property.city or '', property.state_id.name if property.state_id else '', property.country_id.name if property.country_id else '', property.postcode or '']"/>
-                <div class="row g-4">
-                    <div class="col-lg-4 estate-portal-sidebar">
-                        <div class="card shadow-sm mb-4 estate-detail-card estate-agent-card">
-                            <div class="card-body">
-                                <div class="estate-card-header">Agent / Sales Rep</div>
-                                <t t-set="agent_name" t-value="property.user_id.name or 'Assigned Agent'"/>
-                                <div class="d-flex align-items-center mb-3">
-                                    <div class="estate-agent-avatar me-3">
-                                        <t t-if="property.user_id and property.user_id.partner_id.image_128">
-                                            <img t-att-src="'/web/image/res.partner/%s/image_128' % property.user_id.partner_id.id"
-                                                 t-att-alt="agent_name"/>
-                                        </t>
-                                        <t t-else="">
-                                            <span class="estate-agent-placeholder">
-                                                <t t-esc="agent_name[:1]"/>
-                                            </span>
-                                        </t>
-                                    </div>
-                                    <div>
-                                        <div class="fw-semibold">
-                                            <t t-esc="agent_name"/>
-                                        </div>
-                                        <t t-if="property.user_id.partner_id.email">
-                                            <div class="text-muted">
-                                                <a t-att-href="'mailto:%s' % property.user_id.partner_id.email">
-                                                    <t t-esc="property.user_id.partner_id.email"/>
-                                                </a>
-                                            </div>
-                                        </t>
-                                        <t t-if="property.user_id.partner_id.phone">
-                                            <div class="text-muted">
-                                                <a t-att-href="'tel:%s' % property.user_id.partner_id.phone">
-                                                    <t t-esc="property.user_id.partner_id.phone"/>
-                                                </a>
-                                            </div>
-                                        </t>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+            <t t-set="state_map" t-value="state_selection or {}"/>
+            <t t-set="address_parts"
+               t-value="[property.street or '', property.street2 or '', property.city or '', property.state_id.name if property.state_id else '', property.country_id.name if property.country_id else '', property.postcode or '']"/>
+            <t t-set="address_display" t-value="', '.join([part for part in address_parts if part])"/>
+            <t t-set="has_gallery" t-value="bool(property.image_ids)"/>
+            <t t-set="hero_image" t-value="property.image_ids[0] if property.image_ids else False"/>
+            <div class="container my-5 estate-property-detail estate-property-showcase">
+                <nav aria-label="breadcrumb" class="estate-breadcrumb mb-3">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="/properties">Properties</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">
+                            <t t-esc="property.name"/>
+                        </li>
+                    </ol>
+                </nav>
 
-                        <div class="card shadow-sm mb-4 estate-detail-card estate-inquiry-card" id="property-inquiry">
-                            <div class="card-body">
-                                <div class="estate-card-header">Request More Information</div>
-                                <form method="post" t-att-action="'/properties/%s/inquiry' % property.id">
-                                    <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
-                                    <div class="mb-3">
-                                        <label class="form-label">Name</label>
-                                        <input type="text" name="name" class="form-control" required="required"/>
-                                    </div>
-                                    <div class="mb-3">
-                                        <label class="form-label">Email</label>
-                                        <input type="email" name="email" class="form-control" required="required"/>
-                                    </div>
-                                    <div class="mb-3">
-                                        <label class="form-label">Phone</label>
-                                        <input type="text" name="phone" class="form-control"/>
-                                    </div>
-                                    <div class="mb-3">
-                                        <label class="form-label">Message</label>
-                                        <textarea name="message" class="form-control" rows="3"></textarea>
-                                    </div>
-                                    <button type="submit" class="btn btn-primary w-100">Send Inquiry</button>
-                                </form>
+                <header class="estate-hero">
+                    <div class="d-flex flex-column flex-lg-row justify-content-between align-items-lg-start gap-3">
+                        <div>
+                            <h1 class="estate-title mb-2"><t t-esc="property.name"/></h1>
+                            <div class="estate-subtitle text-muted">
+                                <t t-if="property.property_type_id.name">
+                                    <span class="estate-property-type"><t t-esc="property.property_type_id.name"/></span>
+                                </t>
+                                <t t-if="address_display">
+                                    <span class="estate-address"> • <t t-esc="address_display"/></span>
+                                </t>
                             </div>
                         </div>
+                        <span class="badge bg-secondary estate-status-badge">
+                            <t t-esc="state_map.get(property.state, property.state)"/>
+                        </span>
                     </div>
-                    <div class="col-lg-8">
-                        <nav aria-label="breadcrumb" class="mb-4">
-                            <ol class="breadcrumb">
-                                <li class="breadcrumb-item"><a href="/properties">Properties</a></li>
-                                <li class="breadcrumb-item active" aria-current="page">
-                                    <t t-esc="property.name"/>
-                                </li>
-                            </ol>
-                        </nav>
-                        <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-start mb-4">
-                            <div>
-                                <h1 class="mb-2"><t t-esc="property.name"/></h1>
-                                <div class="text-muted">
-                                    <t t-esc="property.property_type_id.name or ''"/>
-                                    <t t-if="property.city">
-                                        • <t t-esc="property.city"/>
-                                    </t>
-                                </div>
-                            </div>
-                            <span class="badge bg-secondary estate-status-badge mt-2 mt-md-0">
-                                <t t-esc="state_map.get(property.state, property.state)"/>
-                            </span>
-                        </div>
+                    <div class="estate-quick-stats mt-3">
+                        <t t-if="property.bedrooms">
+                            <span class="estate-stat"><strong><t t-esc="property.bedrooms"/></strong> Beds</span>
+                        </t>
+                        <t t-if="property.bathrooms">
+                            <span class="estate-stat"><strong><t t-esc="property.bathrooms"/></strong> Baths</span>
+                        </t>
+                        <t t-if="property.living_area">
+                            <span class="estate-stat"><strong><t t-esc="property.living_area"/></strong> Sqft</span>
+                        </t>
+                        <t t-if="property.lot_size">
+                            <span class="estate-stat"><strong><t t-esc="property.lot_size"/></strong> Lot Sqft</span>
+                        </t>
+                    </div>
+                </header>
 
-                        <div class="card shadow-sm mb-4 estate-detail-card estate-price-card">
-                            <div class="card-body">
-                                <h5 class="card-title mb-3">Sale Information</h5>
-                                <div class="d-flex justify-content-between align-items-start mb-3">
-                                    <div>
-                                        <div class="text-muted">Asking Price</div>
-                                        <div class="estate-price">
-                                            <t t-esc="formatted_expected_price"/>
-                                        </div>
-                                    </div>
-                                </div>
-                                <ul class="list-unstyled mb-0 estate-detail-list">
-                                    <li>
-                                        <span class="text-muted">Property Type</span>
-                                        <span class="fw-semibold"><t t-esc="property.property_type_id.name or '—'"/></span>
-                                    </li>
-                                    <li>
-                                        <span class="text-muted">Address</span>
-                                        <span class="fw-semibold">
-                                            <t t-esc="', '.join([part for part in address_parts if part]) or '—'"/>
-                                        </span>
-                                    </li>
-                                    <t t-if="property.date_availability">
-                                        <li>
-                                            <span class="text-muted">Available From</span>
-                                            <span class="fw-semibold">
-                                                <span t-field="property.date_availability"/>
-                                            </span>
-                                        </li>
-                                    </t>
-                                    <t t-if="formatted_best_price">
-                                        <li>
-                                            <span class="text-muted">Best Offer</span>
-                                            <span class="fw-semibold"><t t-esc="formatted_best_price"/></span>
-                                        </li>
-                                    </t>
-                                </ul>
-                                <div class="d-flex flex-column flex-sm-row gap-2 mt-4">
-                                    <a class="btn btn-primary flex-fill" href="#property-inquiry">
-                                        Schedule a tour
-                                    </a>
-                                    <a class="btn btn-outline-primary flex-fill" href="#property-inquiry">
-                                        Request info
-                                    </a>
-                                </div>
-                                <t t-if="property.tag_ids">
-                                    <div class="mt-4">
-                                        <div class="text-muted mb-2">Tags</div>
-                                        <div class="d-flex flex-wrap gap-2 estate-pill-list">
-                                            <t t-foreach="property.tag_ids" t-as="tag">
-                                                <span class="badge rounded-pill text-bg-light estate-tag estate-pill">
-                                                    <t t-esc="tag.name"/>
-                                                </span>
-                                            </t>
-                                        </div>
-                                    </div>
-                                </t>
-                            </div>
+                <section class="estate-gallery estate-gallery--hero mt-4" data-gallery="property">
+                    <t t-if="has_gallery">
+                        <div class="estate-gallery__hero">
+                            <button type="button"
+                                    class="estate-gallery__hero-item"
+                                    t-att-data-gallery-index="0"
+                                    t-att-data-full-src="'/web/image/estate.property.image/%s/image_1920' % hero_image.id"
+                                    t-att-aria-label="'View image %s' % 1">
+                                <img class="estate-gallery__hero-image"
+                                     loading="eager"
+                                     fetchpriority="high"
+                                     t-att-src="'/web/image/estate.property.image/%s/image_1920' % hero_image.id"
+                                     t-att-alt="hero_image.name or property.name"/>
+                            </button>
+                            <button type="button"
+                                    class="estate-gallery__view-all"
+                                    t-att-data-gallery-index="0"
+                                    aria-label="View all photos">
+                                <i class="fa fa-th" aria-hidden="true"></i>
+                                <span>View all photos</span>
+                                <span class="estate-gallery__view-count">(<t t-esc="len(property.image_ids)"/>)</span>
+                            </button>
                         </div>
-
-                        <div class="card shadow-sm mb-4 estate-gallery" data-gallery="property">
-                            <div class="estate-gallery__mosaic">
-                                <t t-if="property.image_ids">
-                                    <div class="estate-gallery__mosaic-main">
-                                        <button type="button"
-                                                class="estate-gallery__mosaic-item estate-gallery__mosaic-item--main"
-                                                t-att-data-gallery-index="0"
-                                                t-att-data-full-src="'/web/image/estate.property.image/%s/image_1920' % property.image_ids[0].id"
-                                                t-att-aria-label="'View image %s' % 1">
-                                            <img class="estate-gallery__mosaic-image"
-                                                 t-att-src="'/web/image/estate.property.image/%s/image_1920' % property.image_ids[0].id"
-                                                 t-att-alt="property.image_ids[0].name or property.name"/>
-                                        </button>
-                                        <button type="button"
-                                                class="estate-gallery__view-all"
-                                                t-att-data-gallery-index="0"
-                                                aria-label="View all photos">
-                                            <i class="fa fa-th" aria-hidden="true"></i>
-                                            <span>View all photos</span>
-                                            <t t-if="len(property.image_ids)">
-                                                <span class="estate-gallery__view-count">
-                                                    (<t t-esc="len(property.image_ids)"/>)
-                                                </span>
-                                            </t>
-                                        </button>
-                                    </div>
-                                    <div class="estate-gallery__mosaic-grid">
-                                        <t t-foreach="property.image_ids" t-as="image" t-foreach-index="index">
-                                            <t t-if="(index or 0) &gt; 0 and (index or 0) &lt; 5">
-                                                <button type="button"
-                                                        class="estate-gallery__mosaic-item"
-                                                        t-att-data-gallery-index="index"
-                                                        t-att-data-full-src="'/web/image/estate.property.image/%s/image_1920' % image.id"
-                                                        t-att-aria-label="'View image %s' % ((index or 0) + 1)">
-                                                    <img class="estate-gallery__mosaic-image"
-                                                         t-att-src="'/web/image/estate.property.image/%s/image_1920' % image.id"
-                                                         t-att-alt="image.name or property.name"/>
-                                                </button>
-                                            </t>
-                                        </t>
-                                    </div>
+                        <div class="estate-gallery__thumbs">
+                            <t t-foreach="property.image_ids" t-as="image" t-foreach-index="index">
+                                <t t-if="(index or 0) &gt; 0 and (index or 0) &lt; 5">
+                                    <button type="button"
+                                            class="estate-gallery__thumb"
+                                            t-att-data-gallery-index="index"
+                                            t-att-data-full-src="'/web/image/estate.property.image/%s/image_1920' % image.id"
+                                            t-att-aria-label="'View image %s' % ((index or 0) + 1)">
+                                        <img class="estate-gallery__thumb-image"
+                                             loading="lazy"
+                                             t-att-src="'/web/image/estate.property.image/%s/image_1920' % image.id"
+                                             t-att-alt="image.name or property.name"/>
+                                    </button>
                                 </t>
-                                <t t-elif="property.image">
-                                    <div class="estate-gallery__mosaic-main">
-                                        <button type="button"
-                                                class="estate-gallery__mosaic-item estate-gallery__mosaic-item--main"
-                                                t-att-data-gallery-index="0"
-                                                t-att-data-full-src="'/web/image/estate.property/%s/image' % property.id"
-                                                t-att-aria-label="'View image %s' % 1">
-                                            <img class="estate-gallery__mosaic-image"
-                                                 t-att-src="'/web/image/estate.property/%s/image' % property.id"
-                                                 t-att-alt="property.name"/>
-                                        </button>
-                                        <button type="button"
-                                                class="estate-gallery__view-all"
-                                                t-att-data-gallery-index="0"
-                                                aria-label="View all photos">
-                                            <i class="fa fa-th" aria-hidden="true"></i>
-                                            <span>View all photos</span>
-                                        </button>
-                                    </div>
-                                </t>
-                                <t t-else="">
-                                    <div class="estate-gallery__placeholder" aria-label="No images available">
-                                        <span class="text-muted">No images available</span>
-                                    </div>
-                                </t>
-                            </div>
+                            </t>
                         </div>
+                    </t>
+                    <t t-elif="property.image">
+                        <div class="estate-gallery__hero">
+                            <button type="button"
+                                    class="estate-gallery__hero-item"
+                                    t-att-data-gallery-index="0"
+                                    t-att-data-full-src="'/web/image/estate.property/%s/image' % property.id"
+                                    t-att-aria-label="'View image %s' % 1">
+                                <img class="estate-gallery__hero-image"
+                                     loading="eager"
+                                     fetchpriority="high"
+                                     t-att-src="'/web/image/estate.property/%s/image' % property.id"
+                                     t-att-alt="property.name"/>
+                            </button>
+                            <button type="button"
+                                    class="estate-gallery__view-all"
+                                    t-att-data-gallery-index="0"
+                                    aria-label="View all photos">
+                                <i class="fa fa-th" aria-hidden="true"></i>
+                                <span>View all photos</span>
+                            </button>
+                        </div>
+                    </t>
+                    <t t-else="">
+                        <div class="estate-gallery__placeholder" aria-label="No images available">
+                            <span class="text-muted">No images available</span>
+                        </div>
+                    </t>
+                </section>
 
-                        <div class="card shadow-sm mb-4 estate-detail-card">
-                            <div class="card-body">
-                                <h5 class="card-title">Description</h5>
-                                <p class="text-muted mb-0">
+                <div class="row g-4 mt-1">
+                    <div class="col-lg-8 order-2 order-lg-1">
+                        <section class="estate-section estate-section--about">
+                            <div class="estate-section__header">
+                                <h2>About this home</h2>
+                            </div>
+                            <div class="estate-description">
+                                <input class="estate-description__toggle" type="checkbox" id="estate-description-toggle"/>
+                                <p class="estate-description__content text-muted">
                                     <t t-esc="property.description or 'No description provided.'"/>
                                 </p>
+                                <label class="estate-description__label" for="estate-description-toggle">
+                                    <span class="estate-description__more">Read more</span>
+                                    <span class="estate-description__less">Show less</span>
+                                </label>
                             </div>
-                        </div>
+                        </section>
 
-                        <t t-set="has_features"
-                           t-value="property.bedrooms or property.bathrooms or property.living_area or property.lot_size or property.garage is not None"/>
-                        <t t-if="has_features">
-                            <div class="card shadow-sm mb-4 estate-detail-card estate-feature-card">
+                        <t t-set="has_interior"
+                           t-value="property.bedrooms or property.bathrooms or property.living_area"/>
+                        <t t-set="has_exterior"
+                           t-value="property.lot_size or property.garden or property.garden_area or property.garden_orientation or property.garage"/>
+                        <t t-set="has_utilities" t-value="bool(property.utility_ids)"/>
+                        <t t-set="has_additional" t-value="property.survey_complete or property.flood_zone"/>
+
+                        <t t-if="has_interior or has_exterior or has_utilities or has_additional">
+                            <section class="estate-section estate-section--amenities">
+                                <div class="estate-section__header">
+                                    <h2>Features &amp; amenities</h2>
+                                </div>
+                                <div class="estate-amenities">
+                                    <t t-if="has_interior">
+                                        <div class="estate-amenities__group">
+                                            <h3 class="estate-amenities__title">Interior</h3>
+                                            <div class="estate-amenities__chips">
+                                                <t t-if="property.bedrooms">
+                                                    <span class="estate-amenity-chip">Bedrooms: <t t-esc="property.bedrooms"/></span>
+                                                </t>
+                                                <t t-if="property.bathrooms">
+                                                    <span class="estate-amenity-chip">Bathrooms: <t t-esc="property.bathrooms"/></span>
+                                                </t>
+                                                <t t-if="property.living_area">
+                                                    <span class="estate-amenity-chip">Living area: <t t-esc="property.living_area"/> sqft</span>
+                                                </t>
+                                            </div>
+                                        </div>
+                                    </t>
+                                    <t t-if="has_exterior">
+                                        <div class="estate-amenities__group">
+                                            <h3 class="estate-amenities__title">Exterior</h3>
+                                            <div class="estate-amenities__chips">
+                                                <t t-if="property.lot_size">
+                                                    <span class="estate-amenity-chip">Lot size: <t t-esc="property.lot_size"/> sqft</span>
+                                                </t>
+                                                <t t-if="property.garden">
+                                                    <span class="estate-amenity-chip">Garden</span>
+                                                </t>
+                                                <t t-if="property.garden_area">
+                                                    <span class="estate-amenity-chip">Garden area: <t t-esc="property.garden_area"/> sqft</span>
+                                                </t>
+                                                <t t-if="property.garden_orientation">
+                                                    <span class="estate-amenity-chip">Garden orientation: <t t-esc="property.garden_orientation"/></span>
+                                                </t>
+                                                <t t-if="property.garage is not None">
+                                                    <span class="estate-amenity-chip">Garage: <t t-if="property.garage">Yes</t><t t-else="">No</t></span>
+                                                </t>
+                                            </div>
+                                        </div>
+                                    </t>
+                                    <t t-if="has_utilities">
+                                        <div class="estate-amenities__group">
+                                            <h3 class="estate-amenities__title">Utilities</h3>
+                                            <div class="estate-amenities__chips">
+                                                <t t-foreach="property.utility_ids" t-as="utility">
+                                                    <span class="estate-amenity-chip"><t t-esc="utility.name"/></span>
+                                                </t>
+                                            </div>
+                                        </div>
+                                    </t>
+                                    <t t-if="has_additional">
+                                        <div class="estate-amenities__group">
+                                            <h3 class="estate-amenities__title">Additional</h3>
+                                            <div class="estate-amenities__chips">
+                                                <t t-if="property.survey_complete">
+                                                    <span class="estate-amenity-chip">Survey complete</span>
+                                                </t>
+                                                <t t-if="property.flood_zone">
+                                                    <span class="estate-amenity-chip">Flood zone</span>
+                                                </t>
+                                            </div>
+                                        </div>
+                                    </t>
+                                </div>
+                            </section>
+                        </t>
+
+                        <t t-if="address_display">
+                            <section class="estate-section estate-section--location">
+                                <div class="estate-section__header">
+                                    <h2>Location</h2>
+                                </div>
+                                <div class="estate-location-card">
+                                    <div class="estate-location-card__details">
+                                        <p class="mb-2"><t t-esc="address_display"/></p>
+                                        <a class="btn btn-outline-primary btn-sm"
+                                           t-att-href="'https://maps.google.com/?q=%s' % address_display"
+                                           target="_blank"
+                                           rel="noopener">Open in Google Maps</a>
+                                    </div>
+                                </div>
+                            </section>
+                        </t>
+
+                        <t t-if="property.tag_ids">
+                            <section class="estate-section estate-section--tags">
+                                <div class="estate-section__header">
+                                    <h2>Tags</h2>
+                                </div>
+                                <div class="d-flex flex-wrap gap-2 estate-pill-list">
+                                    <t t-foreach="property.tag_ids" t-as="tag">
+                                        <span class="badge rounded-pill text-bg-light estate-tag estate-pill">
+                                            <t t-esc="tag.name"/>
+                                        </span>
+                                    </t>
+                                </div>
+                            </section>
+                        </t>
+                    </div>
+
+                    <div class="col-lg-4 order-1 order-lg-2">
+                        <div class="estate-portal-sidebar">
+                            <div class="card shadow-sm mb-4 estate-detail-card estate-price-card">
                                 <div class="card-body">
-                                    <h5 class="card-title">Key facts</h5>
-                                    <div class="estate-key-facts">
-                                        <t t-if="property.bedrooms">
-                                            <div class="estate-key-fact">
-                                                <span class="estate-key-fact__label">Bedrooms</span>
-                                                <span class="estate-key-fact__value"><t t-esc="property.bedrooms"/></span>
-                                            </div>
-                                        </t>
-                                        <t t-if="property.bathrooms">
-                                            <div class="estate-key-fact">
-                                                <span class="estate-key-fact__label">Bathrooms</span>
-                                                <span class="estate-key-fact__value"><t t-esc="property.bathrooms"/></span>
-                                            </div>
-                                        </t>
+                                    <div class="estate-card-header">Price</div>
+                                    <div class="estate-price">
+                                        <t t-esc="formatted_expected_price"/>
+                                    </div>
+                                    <div class="estate-price-meta text-muted">
                                         <t t-if="property.living_area">
-                                            <div class="estate-key-fact">
-                                                <span class="estate-key-fact__label">Living Area</span>
-                                                <span class="estate-key-fact__value">
-                                                    <t t-esc="property.living_area"/> sqft
-                                                </span>
-                                            </div>
+                                            <span><t t-esc="property.living_area"/> sqft</span>
                                         </t>
-                                        <t t-if="property.lot_size">
-                                            <div class="estate-key-fact">
-                                                <span class="estate-key-fact__label">Lot Size</span>
-                                                <span class="estate-key-fact__value"><t t-esc="property.lot_size"/> sqft</span>
-                                            </div>
-                                        </t>
-                                        <t t-if="property.garage is not None">
-                                            <div class="estate-key-fact">
-                                                <span class="estate-key-fact__label">Garage</span>
-                                                <span class="estate-key-fact__value">
-                                                    <t t-if="property.garage">Yes</t>
-                                                    <t t-else="">No</t>
+                                    </div>
+                                    <div class="d-flex flex-column gap-2 mt-4">
+                                        <a class="btn btn-primary w-100" href="#property-inquiry">
+                                            Schedule a tour
+                                        </a>
+                                        <a class="btn btn-outline-primary w-100" href="#property-inquiry">
+                                            Request info
+                                        </a>
+                                    </div>
+                                    <div class="estate-supplemental mt-4">
+                                        <ul class="list-unstyled mb-0 estate-detail-list">
+                                            <t t-if="property.date_availability">
+                                                <li>
+                                                    <span class="text-muted">Available From</span>
+                                                    <span class="fw-semibold"><span t-field="property.date_availability"/></span>
+                                                </li>
+                                            </t>
+                                            <t t-if="formatted_best_price">
+                                                <li>
+                                                    <span class="text-muted">Best Offer</span>
+                                                    <span class="fw-semibold"><t t-esc="formatted_best_price"/></span>
+                                                </li>
+                                            </t>
+                                            <t t-if="property.property_type_id">
+                                                <li>
+                                                    <span class="text-muted">Property Type</span>
+                                                    <span class="fw-semibold"><t t-esc="property.property_type_id.name"/></span>
+                                                </li>
+                                            </t>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="card shadow-sm mb-4 estate-detail-card estate-inquiry-card" id="property-inquiry">
+                                <div class="card-body">
+                                    <div class="estate-card-header">Request More Information</div>
+                                    <form method="post" t-att-action="'/properties/%s/inquiry' % property.id">
+                                        <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                                        <div class="mb-3">
+                                            <label class="form-label" for="estate-inquiry-name">Name</label>
+                                            <input type="text" id="estate-inquiry-name" name="name" class="form-control" required="required"/>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label" for="estate-inquiry-email">Email</label>
+                                            <input type="email" id="estate-inquiry-email" name="email" class="form-control" required="required"/>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label" for="estate-inquiry-phone">Phone</label>
+                                            <input type="text" id="estate-inquiry-phone" name="phone" class="form-control"/>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label" for="estate-inquiry-message">Message</label>
+                                            <textarea id="estate-inquiry-message" name="message" class="form-control" rows="3"></textarea>
+                                        </div>
+                                        <button type="submit" class="btn btn-primary w-100">Send Inquiry</button>
+                                    </form>
+                                </div>
+                            </div>
+
+                            <div class="card shadow-sm mb-4 estate-detail-card estate-agent-card">
+                                <div class="card-body">
+                                    <div class="estate-card-header">Agent / Sales Rep</div>
+                                    <t t-set="agent_name" t-value="property.user_id.name or 'Assigned Agent'"/>
+                                    <div class="d-flex align-items-center mb-3">
+                                        <div class="estate-agent-avatar me-3">
+                                            <t t-if="property.user_id and property.user_id.partner_id.image_128">
+                                                <img t-att-src="'/web/image/res.partner/%s/image_128' % property.user_id.partner_id.id"
+                                                     t-att-alt="agent_name"/>
+                                            </t>
+                                            <t t-else="">
+                                                <span class="estate-agent-placeholder">
+                                                    <t t-esc="agent_name[:1]"/>
                                                 </span>
+                                            </t>
+                                        </div>
+                                        <div>
+                                            <div class="fw-semibold">
+                                                <t t-esc="agent_name"/>
                                             </div>
+                                            <t t-if="property.user_id.partner_id.email">
+                                                <div class="text-muted">
+                                                    <a t-att-href="'mailto:%s' % property.user_id.partner_id.email">
+                                                        <t t-esc="property.user_id.partner_id.email"/>
+                                                    </a>
+                                                </div>
+                                            </t>
+                                            <t t-if="property.user_id.partner_id.phone">
+                                                <div class="text-muted">
+                                                    <a t-att-href="'tel:%s' % property.user_id.partner_id.phone">
+                                                        <t t-esc="property.user_id.partner_id.phone"/>
+                                                    </a>
+                                                </div>
+                                            </t>
+                                        </div>
+                                    </div>
+                                    <div class="d-flex flex-column gap-2">
+                                        <t t-if="property.user_id.partner_id.phone">
+                                            <a class="btn btn-outline-primary w-100" t-att-href="'tel:%s' % property.user_id.partner_id.phone">
+                                                Call Agent
+                                            </a>
+                                        </t>
+                                        <t t-if="property.user_id.partner_id.email">
+                                            <a class="btn btn-outline-primary w-100" t-att-href="'mailto:%s' % property.user_id.partner_id.email">
+                                                Email Agent
+                                            </a>
                                         </t>
                                     </div>
                                 </div>
                             </div>
-                        </t>
-
+                        </div>
                     </div>
                 </div>
+
                 <div class="estate-lightbox" aria-hidden="true" role="dialog" aria-modal="true">
                     <div class="estate-lightbox__backdrop" data-lightbox-close="true"></div>
                     <div class="estate-lightbox__content" role="document">

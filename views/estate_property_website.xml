@@ -212,14 +212,14 @@
                                         <li>
                                             <span class="text-muted">Available From</span>
                                             <span class="fw-semibold">
-                                                <t t-field="property.date_availability"/>
+                                                <span t-field="property.date_availability"/>
                                             </span>
                                         </li>
                                     </t>
                                     <li>
                                         <span class="text-muted">Created</span>
                                         <span class="fw-semibold">
-                                            <t t-field="property.create_date"/>
+                                            <span t-field="property.create_date"/>
                                         </span>
                                     </li>
                                     <t t-if="property.company_id">

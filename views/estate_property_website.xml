@@ -96,7 +96,7 @@
             <t t-set="address_display" t-value="', '.join([part for part in address_parts if part])"/>
             <t t-set="has_gallery" t-value="bool(property.image_ids)"/>
             <t t-set="hero_image" t-value="property.image_ids[0] if property.image_ids else False"/>
-            <div class="container my-5 estate-property-detail estate-property-showcase">
+            <div class="container my-5 estate-property-detail estate-property-showcase hex-estate-property-page">
                 <nav aria-label="breadcrumb" class="estate-breadcrumb mb-3">
                     <ol class="breadcrumb">
                         <li class="breadcrumb-item"><a href="/properties">Properties</a></li>
@@ -144,7 +144,9 @@
                         <div class="estate-gallery__hero">
                             <button type="button"
                                     class="estate-gallery__hero-item"
-                                    t-att-data-gallery-index="0"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#hex_property_gallery_modal"
+                                    t-att-data-hex-gallery-index="0"
                                     t-att-data-full-src="'/web/image/estate.property.image/%s/image_1920' % hero_image.id"
                                     t-att-aria-label="'View image %s' % 1">
                                 <img class="estate-gallery__hero-image"
@@ -155,7 +157,9 @@
                             </button>
                             <button type="button"
                                     class="estate-gallery__view-all"
-                                    t-att-data-gallery-index="0"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#hex_property_gallery_modal"
+                                    t-att-data-hex-gallery-index="0"
                                     aria-label="View all photos">
                                 <i class="fa fa-th" aria-hidden="true"></i>
                                 <span>View all photos</span>
@@ -167,7 +171,9 @@
                                 <t t-if="(index or 0) &gt; 0 and (index or 0) &lt; 5">
                                     <button type="button"
                                             class="estate-gallery__thumb"
-                                            t-att-data-gallery-index="index"
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#hex_property_gallery_modal"
+                                            t-att-data-hex-gallery-index="index"
                                             t-att-data-full-src="'/web/image/estate.property.image/%s/image_1920' % image.id"
                                             t-att-aria-label="'View image %s' % ((index or 0) + 1)">
                                         <img class="estate-gallery__thumb-image"
@@ -183,7 +189,9 @@
                         <div class="estate-gallery__hero">
                             <button type="button"
                                     class="estate-gallery__hero-item"
-                                    t-att-data-gallery-index="0"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#hex_property_gallery_modal"
+                                    t-att-data-hex-gallery-index="0"
                                     t-att-data-full-src="'/web/image/estate.property/%s/image' % property.id"
                                     t-att-aria-label="'View image %s' % 1">
                                 <img class="estate-gallery__hero-image"
@@ -194,7 +202,9 @@
                             </button>
                             <button type="button"
                                     class="estate-gallery__view-all"
-                                    t-att-data-gallery-index="0"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#hex_property_gallery_modal"
+                                    t-att-data-hex-gallery-index="0"
                                     aria-label="View all photos">
                                 <i class="fa fa-th" aria-hidden="true"></i>
                                 <span>View all photos</span>
@@ -463,19 +473,53 @@
                     </div>
                 </div>
 
-                <div class="estate-lightbox" aria-hidden="true" role="dialog" aria-modal="true">
-                    <div class="estate-lightbox__backdrop" data-lightbox-close="true"></div>
-                    <div class="estate-lightbox__content" role="document">
-                        <button type="button" class="estate-lightbox__close" aria-label="Close image gallery">
-                            <i class="fa fa-times" aria-hidden="true"></i>
-                        </button>
-                        <button type="button" class="estate-lightbox__nav estate-lightbox__prev" aria-label="Previous image">
-                            <i class="fa fa-chevron-left" aria-hidden="true"></i>
-                        </button>
-                        <img class="estate-lightbox__image" alt="Property image preview"/>
-                        <button type="button" class="estate-lightbox__nav estate-lightbox__next" aria-label="Next image">
-                            <i class="fa fa-chevron-right" aria-hidden="true"></i>
-                        </button>
+                <div class="modal fade"
+                     id="hex_property_gallery_modal"
+                     tabindex="-1"
+                     aria-hidden="true"
+                     aria-labelledby="hexPropertyGalleryLabel">
+                    <div class="modal-dialog modal-dialog-centered modal-xl">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="hexPropertyGalleryLabel">Property Gallery</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <div id="hex_property_gallery_carousel"
+                                     class="carousel slide"
+                                     data-bs-ride="false"
+                                     aria-label="Property photo carousel">
+                                    <div class="carousel-inner">
+                                        <t t-if="has_gallery">
+                                            <t t-foreach="property.image_ids" t-as="image" t-foreach-index="index">
+                                                <div t-attf-class="carousel-item #{'active' if (index or 0) == 0 else ''}">
+                                                    <img class="d-block w-100 hex-property-gallery__image"
+                                                         t-att-src="'/web/image/estate.property.image/%s/image_1920' % image.id"
+                                                         t-att-alt="image.name or property.name"/>
+                                                </div>
+                                            </t>
+                                        </t>
+                                        <t t-elif="property.image">
+                                            <div class="carousel-item active">
+                                                <img class="d-block w-100 hex-property-gallery__image"
+                                                     t-att-src="'/web/image/estate.property/%s/image' % property.id"
+                                                     t-att-alt="property.name"/>
+                                            </div>
+                                        </t>
+                                    </div>
+                                    <button class="carousel-control-prev" type="button"
+                                            data-bs-target="#hex_property_gallery_carousel" data-bs-slide="prev">
+                                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                        <span class="visually-hidden">Previous</span>
+                                    </button>
+                                    <button class="carousel-control-next" type="button"
+                                            data-bs-target="#hex_property_gallery_carousel" data-bs-slide="next">
+                                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                        <span class="visually-hidden">Next</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

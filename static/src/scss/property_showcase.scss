@@ -1,71 +1,42 @@
 /*
- * Design tokens migrated from the original design reference bundle.
- * These are scoped to .estate-showcase to avoid global conflicts.
+ * Property showcase styles scoped to the property page wrapper.
+ * Keep SCSS syntax conservative for Odoo asset compilation.
  */
-.estate-showcase {
-  --background: 0 0% 100%;
-  --foreground: 222.2 84% 4.9%;
-  --card: 0 0% 100%;
-  --card-foreground: 222.2 84% 4.9%;
-  --popover: 0 0% 100%;
-  --popover-foreground: 222.2 84% 4.9%;
-  --primary: 222.2 47.4% 11.2%;
-  --primary-foreground: 210 40% 98%;
-  --secondary: 210 40% 96.1%;
-  --secondary-foreground: 222.2 47.4% 11.2%;
-  --muted: 210 40% 96.1%;
-  --muted-foreground: 215.4 16.3% 46.9%;
-  --accent: 210 40% 96.1%;
-  --accent-foreground: 222.2 47.4% 11.2%;
-  --destructive: 0 84.2% 60.2%;
-  --destructive-foreground: 210 40% 98%;
-  --border: 214.3 31.8% 91.4%;
-  --input: 214.3 31.8% 91.4%;
-  --ring: 222.2 84% 4.9%;
-  --radius: 0.5rem;
-  --sidebar-background: 0 0% 98%;
-  --sidebar-foreground: 240 5.3% 26.1%;
-  --sidebar-primary: 240 5.9% 10%;
-  --sidebar-primary-foreground: 0 0% 98%;
-  --sidebar-accent: 240 4.8% 95.9%;
-  --sidebar-accent-foreground: 240 5.9% 10%;
-  --sidebar-border: 220 13% 91%;
-  --sidebar-ring: 217.2 91.2% 59.8%;
-
-  background-color: hsl(var(--background));
-  color: hsl(var(--foreground));
+.hex-estate-property-page {
+  background-color: #ffffff;
+  color: #0f172a;
 }
 
-.estate-showcase__card {
-  background-color: hsl(var(--card));
-  color: hsl(var(--card-foreground));
-  border: 1px solid hsl(var(--border));
-  border-radius: calc(var(--radius) + 0.25rem);
+.hex-estate-property-page .estate-showcase__card {
+  background-color: #ffffff;
+  color: #0f172a;
+  border: 1px solid #e2e8f0;
+  border-radius: 0.75rem;
 }
 
-.estate-showcase__muted {
-  color: hsl(var(--muted-foreground));
+.hex-estate-property-page .estate-showcase__muted {
+  color: #64748b;
 }
 
-.estate-showcase__pill {
-  background: hsl(var(--secondary));
-  color: hsl(var(--secondary-foreground));
+.hex-estate-property-page .estate-showcase__pill {
+  background: #f1f5f9;
+  color: #1e293b;
   border-radius: 999px;
   padding: 0.25rem 0.75rem;
   font-weight: 600;
   font-size: 0.75rem;
 }
 
-.estate-showcase__cta {
-  background: hsl(var(--primary));
-  color: hsl(var(--primary-foreground));
-  border-radius: calc(var(--radius) + 0.25rem);
+.hex-estate-property-page .estate-showcase__cta {
+  background: #1e293b;
+  color: #f8fafc;
+  border-radius: 0.75rem;
   padding: 0.75rem 1.25rem;
   font-weight: 600;
 }
 
-.estate-showcase__cta--ghost {
+.hex-estate-property-page .estate-showcase__cta--ghost {
   background: transparent;
-  color: hsl(var(--primary));
-  border: 1px solid hsl(var(--border));
+  color: #1e293b;
+  border: 1px solid #e2e8f0;
 }

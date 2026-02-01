@@ -3,7 +3,7 @@
     <template id="estate_property_showcase_reference" name="Property Showcase Reference">
         <t t-call="website.layout">
             <t t-set="title" t-value="'Property Showcase Reference'"/>
-            <div class="container my-5 estate-showcase">
+            <div class="container my-5 estate-showcase hex-estate-property-page">
                 <div class="mb-4">
                     <span class="estate-showcase__pill">Reference Layout</span>
                     <h1 class="mt-3">Property Showcase Layout</h1>

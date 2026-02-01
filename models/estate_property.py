@@ -2,7 +2,6 @@
 
 from odoo import api, fields, models
 from odoo.exceptions import UserError, ValidationError
-from odoo.addons.http_routing.models.ir_http import slug
 from odoo.tools import float_compare, float_is_zero
 from dateutil.relativedelta import relativedelta
 

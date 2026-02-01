@@ -84,25 +84,22 @@ class EstatePropertyWebsite(http.Controller):
         email = post.get("email") or ""
         phone = post.get("phone") or ""
         message = post.get("message") or ""
-        name_safe = escape(name)
-        message_safe = escape(message).replace("\n", "<br/>") or "-"
-        email_safe = escape(email)
-        phone_safe = escape(phone)
-        email_display = email_safe or "—"
-        phone_display = phone_safe or "—"
-        body = Markup(
-            "Website Inquiry<br/>"
-            "Name: {name}<br/>"
-            "Email: {email}<br/>"
-            "Phone: {phone}<br/>"
-            "Message:<br/>"
-            "{message}"
-        ).format(
-            name=name_safe,
-            email=email_display,
-            phone=phone_display,
-            message=message_safe,
+        base_url = request.env["ir.config_parameter"].sudo().get_param("web.base.url")
+        property_url = (
+            f"{base_url}{property.website_url}"
+            if base_url and property.website_url
+            else ""
         )
+        message_lines = [
+            "Website Inquiry",
+            f"Name: {name or '—'}",
+            f"Email: {email or '—'}",
+            f"Phone: {phone or '—'}",
+            f"Property URL: {property_url or '—'}",
+            "Message:",
+            message or "-",
+        ]
+        body = Markup("<br/>").join(escape(line) for line in message_lines)
         property.sudo().message_post(
             body=body,
             message_type="comment",

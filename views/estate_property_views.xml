@@ -168,7 +168,7 @@
                             </field>
                         </page>
                         <page string="Images" name="images">
-                            <field name="image_ids" mode="kanban,tree" context="{'default_property_id': active_id}">
+                            <field name="image_ids" mode="kanban,tree" context="{'default_property_id': id}">
                                 <kanban class="o_kanban_small_column">
                                     <field name="image_1920"/>
                                     <field name="name"/>
@@ -185,11 +185,11 @@
                                         </t>
                                     </templates>
                                 </kanban>
-                                <tree editable="bottom">
+                                <list editable="bottom">
                                     <field name="sequence" widget="handle"/>
                                     <field name="name"/>
                                     <field name="image_1920" widget="image"/>
-                                </tree>
+                                </list>
                             </field>
                         </page>
                         <page string="Other Info" name="other">

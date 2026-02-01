@@ -32,10 +32,12 @@ Built for RANCS Capital LLC.
         "base",
         "web",
         "mail",  # For chatter/activity tracking
+        "website",
     ],
     "data": [
         # Security first (for existing models)
         "data/estate_security.xml",
+        "security/estate_website_security.xml",
         "security/ir.model.access.csv",
         # Data - stages must be loaded early
         "data/estate_property_stage_data.xml",
@@ -50,6 +52,7 @@ Built for RANCS Capital LLC.
         "views/estate_property_offer_views.xml",
         "views/estate_property_views.xml",
         "views/res_users_views.xml",
+        "views/estate_property_website.xml",
         "views/estate_menus.xml",
     ],
     "demo": [

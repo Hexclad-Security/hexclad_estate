@@ -29,7 +29,16 @@
                 </header>
                 <sheet>
                     <div class="oe_button_box" name="button_box">
-                        <!-- Add stat buttons here later -->
+                        <button name="action_open_website"
+                                type="object"
+                                class="oe_stat_button"
+                                icon="fa-globe"
+                                attrs="{'invisible': [('website_published', '=', False)]}">
+                            <div class="o_stat_info">
+                                <span class="o_stat_text">Go to Website</span>
+                            </div>
+                        </button>
+                        <field name="website_published" widget="website_publish_button"/>
                     </div>
                     <field name="image" widget="image" class="oe_avatar"/>
                     <div class="oe_title">
@@ -156,6 +165,31 @@
                                     <button name="action_refuse" type="object" icon="fa-times" title="Refuse"
                                             invisible="state != 'pending'"/>
                                 </list>
+                            </field>
+                        </page>
+                        <page string="Images" name="images">
+                            <field name="image_ids" mode="kanban,tree" context="{'default_property_id': active_id}">
+                                <kanban class="o_kanban_small_column">
+                                    <field name="image_1920"/>
+                                    <field name="name"/>
+                                    <templates>
+                                        <t t-name="card">
+                                            <div class="o_kanban_record">
+                                                <div class="o_kanban_image">
+                                                    <field name="image_1920" widget="image" class="o_kanban_image_fill"/>
+                                                </div>
+                                                <div class="o_kanban_details">
+                                                    <field name="name" placeholder="Image description..."/>
+                                                </div>
+                                            </div>
+                                        </t>
+                                    </templates>
+                                </kanban>
+                                <tree editable="bottom">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="name"/>
+                                    <field name="image_1920" widget="image"/>
+                                </tree>
                             </field>
                         </page>
                         <page string="Other Info" name="other">

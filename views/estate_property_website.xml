@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="estate_property_listing" name="Properties">
+        <t t-call="website.layout">
+            <t t-set="title">Properties</t>
+            <t t-set="state_map" t-value="dict(state_selection)"/>
+            <div class="container my-5">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h1 class="mb-0">Properties</h1>
+                </div>
+                <form method="get" class="row g-3 mb-4">
+                    <div class="col-md-4">
+                        <label class="form-label">Property Type</label>
+                        <select name="type_id" class="form-select">
+                            <option value="">All Types</option>
+                            <t t-foreach="property_types" t-as="ptype">
+                                <option t-att-value="ptype.id" t-att-selected="ptype.id == selected_type_id">
+                                    <t t-esc="ptype.name"/>
+                                </option>
+                            </t>
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Status</label>
+                        <select name="state" class="form-select">
+                            <option value="">All Statuses</option>
+                            <t t-foreach="state_selection" t-as="state_item">
+                                <option t-att-value="state_item[0]" t-att-selected="state_item[0] == selected_state">
+                                    <t t-esc="state_item[1]"/>
+                                </option>
+                            </t>
+                        </select>
+                    </div>
+                    <div class="col-md-4 d-flex align-items-end">
+                        <button type="submit" class="btn btn-primary me-2">Filter</button>
+                        <a href="/properties" class="btn btn-outline-secondary">Reset</a>
+                    </div>
+                </form>
+                <div class="row g-4">
+                    <t t-if="properties">
+                        <t t-foreach="properties" t-as="property">
+                            <div class="col-md-6 col-lg-4">
+                                <div class="card h-100 shadow-sm">
+                                    <a t-att-href="property.website_url" class="text-decoration-none">
+                                        <t t-if="property.image_ids">
+                                            <img t-att-src="'/web/image/estate.property.image/%s/image_1920' % property.image_ids[0].id"
+                                                 class="card-img-top" t-att-alt="property.name"/>
+                                        </t>
+                                        <t t-elif="property.image">
+                                            <img t-att-src="'/web/image/estate.property/%s/image' % property.id"
+                                                 class="card-img-top" t-att-alt="property.name"/>
+                                        </t>
+                                        <t t-else="">
+                                            <div class="bg-light d-flex align-items-center justify-content-center"
+                                                 style="height: 220px;">
+                                                <span class="text-muted">No image</span>
+                                            </div>
+                                        </t>
+                                    </a>
+                                    <div class="card-body">
+                                        <h5 class="card-title">
+                                            <a t-att-href="property.website_url" class="text-decoration-none text-dark">
+                                                <t t-esc="property.name"/>
+                                            </a>
+                                        </h5>
+                                        <p class="card-text text-muted mb-2">
+                                            <t t-esc="property.property_type_id.name or ''"/> • <t t-esc="property.city or ''"/>
+                                        </p>
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <span class="fw-semibold">$<t t-esc="property.expected_price"/></span>
+                                            <span class="badge bg-secondary">
+                                                <t t-esc="state_map.get(property.state)"/>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+                    </t>
+                    <t t-else="">
+                        <div class="col-12">
+                            <div class="alert alert-info">No properties found.</div>
+                        </div>
+                    </t>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <template id="estate_property_detail" name="Property Detail">
+        <t t-call="website.layout">
+            <t t-set="title" t-value="property.name"/>
+            <div class="container my-5">
+                <nav aria-label="breadcrumb" class="mb-4">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="/properties">Properties</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">
+                            <t t-esc="property.name"/>
+                        </li>
+                    </ol>
+                </nav>
+                <div class="row g-4">
+                    <div class="col-lg-7">
+                        <t t-if="property.image_ids">
+                            <div class="row g-2">
+                                <t t-foreach="property.image_ids" t-as="image">
+                                    <div class="col-6">
+                                        <img class="img-fluid rounded"
+                                             t-att-src="'/web/image/estate.property.image/%s/image_1920' % image.id"
+                                             t-att-alt="image.name or property.name"/>
+                                    </div>
+                                </t>
+                            </div>
+                        </t>
+                        <t t-elif="property.image">
+                            <img class="img-fluid rounded"
+                                 t-att-src="'/web/image/estate.property/%s/image' % property.id"
+                                 t-att-alt="property.name"/>
+                        </t>
+                        <t t-else="">
+                            <div class="bg-light d-flex align-items-center justify-content-center"
+                                 style="height: 320px;">
+                                <span class="text-muted">No images available</span>
+                            </div>
+                        </t>
+                    </div>
+                    <div class="col-lg-5">
+                        <h1 class="mb-3"><t t-esc="property.name"/></h1>
+                        <p class="text-muted mb-4"><t t-esc="property.property_type_id.name or ''"/></p>
+                        <div class="mb-3">
+                            <span class="h4">$<t t-esc="property.expected_price"/></span>
+                            <span class="badge bg-secondary ms-2"><t t-esc="property.state"/></span>
+                        </div>
+                        <ul class="list-unstyled mb-4">
+                            <li><strong>Bedrooms:</strong> <t t-esc="property.bedrooms"/></li>
+                            <li><strong>Bathrooms:</strong> <t t-esc="property.bathrooms"/></li>
+                            <li><strong>Living Area:</strong> <t t-esc="property.living_area"/> sqft</li>
+                            <li><strong>Lot Size:</strong> <t t-esc="property.lot_size"/> sqft</li>
+                            <li><strong>City:</strong> <t t-esc="property.city or ''"/></li>
+                        </ul>
+                        <div class="mb-4">
+                            <h5>Description</h5>
+                            <p class="text-muted"><t t-esc="property.description or 'No description provided.'"/></p>
+                        </div>
+                        <div class="card shadow-sm">
+                            <div class="card-body">
+                                <h5 class="card-title">Request More Information</h5>
+                                <form method="post" t-att-action="'/properties/%s/inquiry' % property.id">
+                                    <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                                    <div class="mb-3">
+                                        <label class="form-label">Name</label>
+                                        <input type="text" name="name" class="form-control" required="required"/>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Email</label>
+                                        <input type="email" name="email" class="form-control" required="required"/>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Phone</label>
+                                        <input type="text" name="phone" class="form-control"/>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Message</label>
+                                        <textarea name="message" class="form-control" rows="3"></textarea>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary w-100">Send Inquiry</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <template id="estate_property_inquiry_thanks" name="Property Inquiry Thanks">
+        <t t-call="website.layout">
+            <div class="container my-5">
+                <div class="alert alert-success" role="alert">
+                    <h4 class="alert-heading">Thank you for your inquiry!</h4>
+                    <p>We have received your message about <strong><t t-esc="property.name"/></strong>.</p>
+                    <hr/>
+                    <p class="mb-0">Our team will be in touch shortly.</p>
+                </div>
+                <a class="btn btn-outline-primary" t-att-href="property.website_url">Back to property</a>
+            </div>
+        </t>
+    </template>
+</odoo>

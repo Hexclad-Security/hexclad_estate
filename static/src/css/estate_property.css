@@ -28,3 +28,13 @@
     margin-top: 4px;
     font-size: 0.85rem;
 }
+
+.estate_website_listing {
+    margin-bottom: 1rem;
+}
+
+.estate_website_listing .estate_publish_help {
+    margin-top: 0.25rem;
+    line-height: 1.4;
+    max-width: 520px;
+}

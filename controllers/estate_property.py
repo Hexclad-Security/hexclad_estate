@@ -4,6 +4,7 @@ from werkzeug.exceptions import NotFound
 
 from odoo import http
 from odoo.http import request
+from odoo.tools.misc import formatLang
 
 
 class EstatePropertyWebsite(http.Controller):
@@ -42,9 +43,29 @@ class EstatePropertyWebsite(http.Controller):
     def property_detail(self, property, **kwargs):
         if not property.website_published or not property.active:
             raise NotFound()
+        currency = (
+            property.company_id.currency_id
+            if property.company_id
+            else request.env.company.currency_id
+        )
+        formatted_expected_price = formatLang(
+            request.env, property.expected_price, currency_obj=currency
+        )
+        formatted_best_price = (
+            formatLang(request.env, property.best_price, currency_obj=currency)
+            if property.best_price
+            else ""
+        )
+        state_selection = dict(property._fields["state"].selection)
         return request.render(
             "hexclad_estate.estate_property_detail",
-            {"property": property},
+            {
+                "property": property,
+                "currency": currency,
+                "formatted_expected_price": formatted_expected_price,
+                "formatted_best_price": formatted_best_price,
+                "state_selection": state_selection,
+            },
         )
 
     @http.route(

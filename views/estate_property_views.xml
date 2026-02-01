@@ -53,10 +53,13 @@
                         </div>
                     </div>
                     <group string="Website Listing" class="estate_website_listing">
-                        <field name="website_published" widget="boolean_toggle" string="Publish on Website"/>
-                        <div class="o_form_label text-muted estate_publish_help">
-                            Toggle this on and save to publish the listing on the website. Use “Go to Website”
-                            above to preview once published.
+                        <div class="o_row">
+                            <div class="o_col-8">
+                                <label for="website_published" string="Publish on Website"/>
+                            </div>
+                            <div class="o_col-4 text-end">
+                                <field name="website_published" widget="boolean_toggle"/>
+                            </div>
                         </div>
                     </group>
                     <group>
@@ -101,7 +104,6 @@
                                     <field name="flood_zone"/>
                                 </group>
                                 <group>
-                                    <field name="facades"/>
                                     <field name="garage"/>
                                     <field name="garden"/>
                                     <field name="garden_area" invisible="not garden"/>

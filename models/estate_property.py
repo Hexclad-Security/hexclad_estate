@@ -199,7 +199,6 @@ class EstateProperty(models.Model):
     bathrooms = fields.Float(string="Bathrooms", default=0)
     living_area = fields.Integer(string="Living Area (sqft)")
     lot_size = fields.Integer(string="Lot Size (sqft)")
-    facades = fields.Integer(string="Facades")
     garage = fields.Boolean(string="Garage")
     garden = fields.Boolean(string="Garden")
     garden_area = fields.Integer(string="Garden Area (sqft)")

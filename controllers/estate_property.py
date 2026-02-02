@@ -56,6 +56,23 @@ class EstatePropertyWebsite(http.Controller):
         self._get_property_model()
         if not property.website_published or not property.active:
             raise NotFound()
+        gallery_images = []
+        if property.image:
+            gallery_images.append(
+                {
+                    "model": "estate.property",
+                    "id": property.id,
+                    "name": property.name,
+                }
+            )
+        for image in property.image_ids:
+            gallery_images.append(
+                {
+                    "model": "estate.property.image",
+                    "id": image.id,
+                    "name": image.name or property.name,
+                }
+            )
         currency = (
             property.company_id.currency_id
             if property.company_id
@@ -75,6 +92,8 @@ class EstatePropertyWebsite(http.Controller):
             {
                 "property": property,
                 "currency": currency,
+                "gallery_images": gallery_images,
+                "gallery_count": len(gallery_images),
                 "formatted_expected_price": formatted_expected_price,
                 "formatted_best_price": formatted_best_price,
                 "state_selection": state_selection,

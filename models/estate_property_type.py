@@ -17,11 +17,11 @@ class EstatePropertyType(models.Model):
     _description = "Real Estate Property Type"
     _order = "sequence, name"
     
-    _constraints = [
-        models.Constraint(
+    _sql_constraints = [
+        (
             "check_name",
             "UNIQUE(name)",
-            message="The property type name must be unique",
+            "The property type name must be unique",
         ),
     ]
     

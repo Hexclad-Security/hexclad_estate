@@ -21,7 +21,7 @@ class EstatePropertyType(models.Model):
         models.Constraint(
             "check_name",
             "UNIQUE(name)",
-            "The property type name must be unique",
+            message="The property type name must be unique",
         ),
     ]
     

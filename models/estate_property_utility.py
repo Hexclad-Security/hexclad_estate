@@ -17,7 +17,7 @@ class EstatePropertyUtility(models.Model):
         models.Constraint(
             "check_name",
             "UNIQUE(name)",
-            "The utility name must be unique",
+            message="The utility name must be unique",
         ),
     ]
 

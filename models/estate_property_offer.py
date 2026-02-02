@@ -24,7 +24,7 @@ class EstatePropertyOffer(models.Model):
         models.Constraint(
             "check_price",
             "CHECK(price > 0)",
-            "The offer price must be strictly positive",
+            message="The offer price must be strictly positive",
         ),
     ]
     

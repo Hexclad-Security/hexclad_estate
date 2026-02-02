@@ -21,7 +21,7 @@ class EstatePropertyTag(models.Model):
         models.Constraint(
             "check_name",
             "UNIQUE(name)",
-            "The tag name must be unique",
+            message="The tag name must be unique",
         ),
     ]
     

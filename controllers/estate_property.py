@@ -57,22 +57,25 @@ class EstatePropertyWebsite(http.Controller):
         if not property.website_published or not property.active:
             raise NotFound()
         gallery_images = []
-        if property.image:
+        index = 0
+        if property.image_1920 or property.image:
             gallery_images.append(
                 {
-                    "model": "estate.property",
-                    "id": property.id,
-                    "name": property.name,
+                    "url": f"/web/image/estate.property/{property.id}/image_1920",
+                    "alt": property.name,
+                    "index": index,
                 }
             )
+            index += 1
         for image in property.image_ids:
             gallery_images.append(
                 {
-                    "model": "estate.property.image",
-                    "id": image.id,
-                    "name": image.name or property.name,
+                    "url": f"/web/image/estate.property.image/{image.id}/image_1920",
+                    "alt": image.name or property.name,
+                    "index": index,
                 }
             )
+            index += 1
         currency = (
             property.company_id.currency_id
             if property.company_id

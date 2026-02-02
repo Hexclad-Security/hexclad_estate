@@ -48,16 +48,16 @@ class EstateProperty(models.Model):
     _order = "id desc"
     _inherit = ["mail.thread", "mail.activity.mixin", "website.published.mixin"]  # Enable chatter
     
-    _constraints = [
-        models.Constraint(
+    _sql_constraints = [
+        (
             "check_expected_price",
             "CHECK(expected_price > 0)",
-            message="The expected price must be strictly positive",
+            "The expected price must be strictly positive",
         ),
-        models.Constraint(
+        (
             "check_selling_price",
             "CHECK(selling_price >= 0)",
-            message="The selling price must be positive",
+            "The selling price must be positive",
         ),
     ]
     

@@ -17,8 +17,12 @@ class EstatePropertyTag(models.Model):
     _description = "Real Estate Property Tag"
     _order = "name"
     
-    _sql_constraints = [
-        ("check_name", "UNIQUE(name)", "The tag name must be unique"),
+    _constraints = [
+        models.Constraint(
+            "check_name",
+            "UNIQUE(name)",
+            "The tag name must be unique",
+        ),
     ]
     
     # ----------------------------------------

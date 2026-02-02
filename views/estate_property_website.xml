@@ -94,8 +94,10 @@
             <t t-set="address_parts"
                t-value="[property.street or '', property.street2 or '', property.city or '', property.state_id.name if property.state_id else '', property.country_id.name if property.country_id else '', property.postcode or '']"/>
             <t t-set="address_display" t-value="', '.join([part for part in address_parts if part])"/>
-            <t t-set="has_gallery" t-value="bool(property.image_ids)"/>
-            <t t-set="hero_image" t-value="property.image_ids[0] if property.image_ids else False"/>
+            <t t-set="gallery_images" t-value="property.image_ids if property.image_ids else ([property] if property.image else [])"/>
+            <t t-set="gallery_image_model" t-value="'estate.property.image' if property.image_ids else 'estate.property'"/>
+            <t t-set="hero_image" t-value="gallery_images[0] if gallery_images else False"/>
+            <t t-set="gallery_count" t-value="len(gallery_images)"/>
             <div class="container my-5 estate-property-detail estate-property-showcase hex-estate-property-page">
                 <nav aria-label="breadcrumb" class="estate-breadcrumb mb-3">
                     <ol class="breadcrumb">
@@ -125,90 +127,84 @@
                     </div>
                     <div class="estate-quick-stats mt-3">
                         <t t-if="property.bedrooms">
-                            <span class="estate-stat"><strong><t t-esc="property.bedrooms"/></strong> Beds</span>
+                            <span class="estate-stat">
+                                <i class="fa fa-bed estate-stat__icon" aria-hidden="true"></i>
+                                <strong><t t-esc="property.bedrooms"/></strong> Beds
+                            </span>
                         </t>
                         <t t-if="property.bathrooms">
-                            <span class="estate-stat"><strong><t t-esc="property.bathrooms"/></strong> Baths</span>
+                            <span class="estate-stat">
+                                <i class="fa fa-bath estate-stat__icon" aria-hidden="true"></i>
+                                <strong><t t-esc="property.bathrooms"/></strong> Baths
+                            </span>
                         </t>
                         <t t-if="property.living_area">
-                            <span class="estate-stat"><strong><t t-esc="property.living_area"/></strong> Sqft</span>
+                            <span class="estate-stat">
+                                <i class="fa fa-ruler-combined estate-stat__icon" aria-hidden="true"></i>
+                                <strong><t t-esc="property.living_area"/></strong> Sqft
+                            </span>
                         </t>
                         <t t-if="property.lot_size">
-                            <span class="estate-stat"><strong><t t-esc="property.lot_size"/></strong> Lot Sqft</span>
+                            <span class="estate-stat">
+                                <img class="estate-stat__icon estate-stat__icon--image"
+                                     src="/hexclad_estate/static/src/img/icons/lot.svg"
+                                     alt=""
+                                     loading="lazy"
+                                     width="16"
+                                     height="16"/>
+                                <strong><t t-esc="property.lot_size"/></strong> Lot Sqft
+                            </span>
                         </t>
                     </div>
+                    <t t-if="property.tag_ids">
+                        <div class="d-flex flex-wrap gap-2 estate-pill-list mt-3">
+                            <t t-foreach="property.tag_ids" t-as="tag">
+                                <span class="badge rounded-pill text-bg-light estate-tag estate-pill">
+                                    <t t-esc="tag.name"/>
+                                </span>
+                            </t>
+                        </div>
+                    </t>
                 </header>
 
                 <section class="estate-gallery estate-gallery--hero mt-4" data-gallery="property">
-                    <t t-if="has_gallery">
+                    <t t-if="gallery_count">
                         <div class="estate-gallery__hero">
                             <button type="button"
-                                    class="estate-gallery__hero-item"
-                                    data-bs-toggle="modal"
-                                    data-bs-target="#hex_property_gallery_modal"
-                                    t-att-data-hex-gallery-index="0"
-                                    t-att-data-full-src="'/web/image/estate.property.image/%s/image_1920' % hero_image.id"
+                                    class="estate-gallery__hero-item hex-property-thumb"
+                                    data-index="0"
+                                    t-att-data-full-src="'/web/image/%s/%s/image_1920' % (gallery_image_model, hero_image.id)"
                                     t-att-aria-label="'View image %s' % 1">
                                 <img class="estate-gallery__hero-image"
                                      loading="eager"
                                      fetchpriority="high"
-                                     t-att-src="'/web/image/estate.property.image/%s/image_1920' % hero_image.id"
+                                     t-att-src="'/web/image/%s/%s/image_1920' % (gallery_image_model, hero_image.id)"
                                      t-att-alt="hero_image.name or property.name"/>
                             </button>
                             <button type="button"
-                                    class="estate-gallery__view-all"
-                                    data-bs-toggle="modal"
-                                    data-bs-target="#hex_property_gallery_modal"
-                                    t-att-data-hex-gallery-index="0"
+                                    class="estate-gallery__view-all hex-property-thumb"
+                                    data-index="0"
                                     aria-label="View all photos">
                                 <i class="fa fa-th" aria-hidden="true"></i>
                                 <span>View all photos</span>
-                                <span class="estate-gallery__view-count">(<t t-esc="len(property.image_ids)"/>)</span>
+                                <span class="estate-gallery__view-count">(<t t-esc="gallery_count"/>)</span>
                             </button>
                         </div>
                         <div class="estate-gallery__thumbs">
-                            <t t-foreach="property.image_ids" t-as="image" t-foreach-index="index">
+                            <t t-foreach="gallery_images" t-as="image" t-foreach-index="index">
                                 <t t-if="(index or 0) &gt; 0 and (index or 0) &lt; 5">
                                     <button type="button"
-                                            class="estate-gallery__thumb"
-                                            data-bs-toggle="modal"
-                                            data-bs-target="#hex_property_gallery_modal"
-                                            t-att-data-hex-gallery-index="index"
-                                            t-att-data-full-src="'/web/image/estate.property.image/%s/image_1920' % image.id"
+                                            class="estate-gallery__thumb hex-property-thumb"
+                                            t-att-data-index="index"
+                                            t-att-data-full-src="'/web/image/%s/%s/image_1920' % (gallery_image_model, image.id)"
                                             t-att-aria-label="'View image %s' % ((index or 0) + 1)">
                                         <img class="estate-gallery__thumb-image"
                                              loading="lazy"
-                                             t-att-src="'/web/image/estate.property.image/%s/image_1920' % image.id"
+                                             t-att-src="'/web/image/%s/%s/image_1920' % (gallery_image_model, image.id)"
                                              t-att-alt="image.name or property.name"/>
                                     </button>
                                 </t>
                             </t>
-                        </div>
-                    </t>
-                    <t t-elif="property.image">
-                        <div class="estate-gallery__hero">
-                            <button type="button"
-                                    class="estate-gallery__hero-item"
-                                    data-bs-toggle="modal"
-                                    data-bs-target="#hex_property_gallery_modal"
-                                    t-att-data-hex-gallery-index="0"
-                                    t-att-data-full-src="'/web/image/estate.property/%s/image' % property.id"
-                                    t-att-aria-label="'View image %s' % 1">
-                                <img class="estate-gallery__hero-image"
-                                     loading="eager"
-                                     fetchpriority="high"
-                                     t-att-src="'/web/image/estate.property/%s/image' % property.id"
-                                     t-att-alt="property.name"/>
-                            </button>
-                            <button type="button"
-                                    class="estate-gallery__view-all"
-                                    data-bs-toggle="modal"
-                                    data-bs-target="#hex_property_gallery_modal"
-                                    t-att-data-hex-gallery-index="0"
-                                    aria-label="View all photos">
-                                <i class="fa fa-th" aria-hidden="true"></i>
-                                <span>View all photos</span>
-                            </button>
                         </div>
                     </t>
                     <t t-else="">
@@ -331,20 +327,6 @@
                             </section>
                         </t>
 
-                        <t t-if="property.tag_ids">
-                            <section class="estate-section estate-section--tags">
-                                <div class="estate-section__header">
-                                    <h2>Tags</h2>
-                                </div>
-                                <div class="d-flex flex-wrap gap-2 estate-pill-list">
-                                    <t t-foreach="property.tag_ids" t-as="tag">
-                                        <span class="badge rounded-pill text-bg-light estate-tag estate-pill">
-                                            <t t-esc="tag.name"/>
-                                        </span>
-                                    </t>
-                                </div>
-                            </section>
-                        </t>
                     </div>
 
                     <div class="col-lg-4 order-1 order-lg-2">
@@ -359,14 +341,6 @@
                                         <t t-if="property.living_area">
                                             <span><t t-esc="property.living_area"/> sqft</span>
                                         </t>
-                                    </div>
-                                    <div class="d-flex flex-column gap-2 mt-4">
-                                        <a class="btn btn-primary w-100" href="#property-inquiry">
-                                            Schedule a tour
-                                        </a>
-                                        <a class="btn btn-outline-primary w-100" href="#property-inquiry">
-                                            Request info
-                                        </a>
                                     </div>
                                     <div class="estate-supplemental mt-4">
                                         <ul class="list-unstyled mb-0 estate-detail-list">
@@ -489,34 +463,46 @@
                                      class="carousel slide"
                                      data-bs-ride="false"
                                      aria-label="Property photo carousel">
+                                    <t t-if="gallery_count">
+                                        <div class="carousel-indicators">
+                                            <t t-foreach="gallery_images" t-as="image" t-foreach-index="index">
+                                                <button type="button"
+                                                        data-bs-target="#hex_property_gallery_carousel"
+                                                        t-att-data-bs-slide-to="index"
+                                                        t-attf-class="#{'active' if (index or 0) == 0 else ''}"
+                                                        t-att-aria-current="'true' if (index or 0) == 0 else None"
+                                                        t-att-aria-label="'Slide %s' % ((index or 0) + 1)"></button>
+                                            </t>
+                                        </div>
+                                    </t>
                                     <div class="carousel-inner">
-                                        <t t-if="has_gallery">
-                                            <t t-foreach="property.image_ids" t-as="image" t-foreach-index="index">
+                                        <t t-if="gallery_count">
+                                            <t t-foreach="gallery_images" t-as="image" t-foreach-index="index">
                                                 <div t-attf-class="carousel-item #{'active' if (index or 0) == 0 else ''}">
                                                     <img class="d-block w-100 hex-property-gallery__image"
-                                                         t-att-src="'/web/image/estate.property.image/%s/image_1920' % image.id"
+                                                         t-att-src="'/web/image/%s/%s/image_1920' % (gallery_image_model, image.id)"
                                                          t-att-alt="image.name or property.name"/>
                                                 </div>
                                             </t>
                                         </t>
-                                        <t t-elif="property.image">
-                                            <div class="carousel-item active">
-                                                <img class="d-block w-100 hex-property-gallery__image"
-                                                     t-att-src="'/web/image/estate.property/%s/image' % property.id"
-                                                     t-att-alt="property.name"/>
+                                        <t t-else="">
+                                            <div class="hex-property-gallery__empty text-center text-muted py-5">
+                                                No images available for this property.
                                             </div>
                                         </t>
                                     </div>
-                                    <button class="carousel-control-prev" type="button"
-                                            data-bs-target="#hex_property_gallery_carousel" data-bs-slide="prev">
-                                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                                        <span class="visually-hidden">Previous</span>
-                                    </button>
-                                    <button class="carousel-control-next" type="button"
-                                            data-bs-target="#hex_property_gallery_carousel" data-bs-slide="next">
-                                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                                        <span class="visually-hidden">Next</span>
-                                    </button>
+                                    <t t-if="gallery_count &gt; 1">
+                                        <button class="carousel-control-prev" type="button"
+                                                data-bs-target="#hex_property_gallery_carousel" data-bs-slide="prev">
+                                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                            <span class="visually-hidden">Previous</span>
+                                        </button>
+                                        <button class="carousel-control-next" type="button"
+                                                data-bs-target="#hex_property_gallery_carousel" data-bs-slide="next">
+                                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                            <span class="visually-hidden">Next</span>
+                                        </button>
+                                    </t>
                                 </div>
                             </div>
                         </div>

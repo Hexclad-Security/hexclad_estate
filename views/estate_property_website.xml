@@ -185,23 +185,28 @@
                                 <span class="estate-gallery__view-count">(<t t-esc="gallery_count"/>)</span>
                             </button>
                         </div>
-                        <div class="estate-gallery__thumbs">
-                            <t t-foreach="gallery_images" t-as="image">
-                                <button type="button"
-                                        class="estate-gallery__thumb hex-property-thumb"
-                                        t-att-data-index="image['index']"
-                                        t-att-aria-label="'View image %s' % (image['index'] + 1)">
-                                    <img class="estate-gallery__thumb-image"
-                                         loading="lazy"
-                                         t-att-src="image['url']"
-                                         t-att-alt="image['alt']"/>
-                                </button>
-                            </t>
-                        </div>
+                        <t t-if="gallery_count &gt; 1">
+                            <div class="estate-gallery__thumbs">
+                                <t t-foreach="gallery_images" t-as="image">
+                                    <button type="button"
+                                            class="estate-gallery__thumb hex-property-thumb"
+                                            t-att-data-index="image['index']"
+                                            t-att-aria-label="'View image %s' % (image['index'] + 1)">
+                                        <img class="estate-gallery__thumb-image"
+                                             loading="lazy"
+                                             t-att-src="image['url']"
+                                             t-att-alt="image['alt']"/>
+                                    </button>
+                                </t>
+                            </div>
+                        </t>
                     </t>
                     <t t-else="">
                         <div class="estate-gallery__placeholder" aria-label="No photos available">
-                            <span class="text-muted">No photos available</span>
+                            <div class="text-center text-muted">
+                                <i class="fa fa-camera fa-2x mb-2" aria-hidden="true"></i>
+                                <div>No photos available</div>
+                            </div>
                         </div>
                     </t>
                 </section>
@@ -439,36 +444,36 @@
                     </div>
                 </div>
 
-                <div class="modal fade"
-                     id="hex_property_gallery_modal"
-                     tabindex="-1"
-                     aria-hidden="true"
-                     aria-labelledby="hexPropertyGalleryLabel">
-                    <div class="modal-dialog modal-dialog-centered modal-xl">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="hexPropertyGalleryLabel">Property Gallery</h5>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                            </div>
-                            <div class="modal-body">
-                                <div id="hex_property_gallery_carousel"
-                                     class="carousel slide"
-                                     data-bs-ride="false"
-                                     aria-label="Property photo carousel">
-                                    <t t-if="gallery_images">
-                                        <div class="carousel-indicators">
-                                            <t t-foreach="gallery_images" t-as="image">
-                                                <button type="button"
-                                                        data-bs-target="#hex_property_gallery_carousel"
-                                                        t-att-data-bs-slide-to="image['index']"
-                                                        t-attf-class="#{'active' if image['index'] == 0 else ''}"
-                                                        t-att-aria-current="'true' if image['index'] == 0 else None"
-                                                        t-att-aria-label="'Slide %s' % (image['index'] + 1)"></button>
-                                            </t>
-                                        </div>
-                                    </t>
-                                    <div class="carousel-inner">
-                                        <t t-if="gallery_images">
+                <t t-if="gallery_images">
+                    <div class="modal fade"
+                         id="hex_property_gallery_modal"
+                         tabindex="-1"
+                         aria-hidden="true"
+                         aria-labelledby="hexPropertyGalleryLabel">
+                        <div class="modal-dialog modal-dialog-centered modal-xl">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="hexPropertyGalleryLabel">Property Gallery</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <div id="hex_property_gallery_carousel"
+                                         class="carousel slide"
+                                         data-bs-ride="false"
+                                         aria-label="Property photo carousel">
+                                        <t t-if="gallery_count &gt; 1">
+                                            <div class="carousel-indicators">
+                                                <t t-foreach="gallery_images" t-as="image">
+                                                    <button type="button"
+                                                            data-bs-target="#hex_property_gallery_carousel"
+                                                            t-att-data-bs-slide-to="image['index']"
+                                                            t-attf-class="#{'active' if image['index'] == 0 else ''}"
+                                                            t-att-aria-current="'true' if image['index'] == 0 else None"
+                                                            t-att-aria-label="'Slide %s' % (image['index'] + 1)"></button>
+                                                </t>
+                                            </div>
+                                        </t>
+                                        <div class="carousel-inner">
                                             <t t-foreach="gallery_images" t-as="image">
                                                 <div t-attf-class="carousel-item #{'active' if image['index'] == 0 else ''}">
                                                     <img class="d-block w-100 hex-property-gallery__image"
@@ -476,30 +481,25 @@
                                                          t-att-alt="image['alt']"/>
                                                 </div>
                                             </t>
-                                        </t>
-                                        <t t-else="">
-                                            <div class="hex-property-gallery__empty text-center text-muted py-5">
-                                                No photos available for this property.
-                                            </div>
+                                        </div>
+                                        <t t-if="gallery_count &gt; 1">
+                                            <button class="carousel-control-prev" type="button"
+                                                    data-bs-target="#hex_property_gallery_carousel" data-bs-slide="prev">
+                                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                                <span class="visually-hidden">Previous</span>
+                                            </button>
+                                            <button class="carousel-control-next" type="button"
+                                                    data-bs-target="#hex_property_gallery_carousel" data-bs-slide="next">
+                                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                                <span class="visually-hidden">Next</span>
+                                            </button>
                                         </t>
                                     </div>
-                                    <t t-if="gallery_count &gt; 1">
-                                        <button class="carousel-control-prev" type="button"
-                                                data-bs-target="#hex_property_gallery_carousel" data-bs-slide="prev">
-                                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                                            <span class="visually-hidden">Previous</span>
-                                        </button>
-                                        <button class="carousel-control-next" type="button"
-                                                data-bs-target="#hex_property_gallery_carousel" data-bs-slide="next">
-                                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                                            <span class="visually-hidden">Next</span>
-                                        </button>
-                                    </t>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
+                </t>
             </div>
         </t>
     </template>

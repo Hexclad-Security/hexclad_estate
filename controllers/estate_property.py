@@ -58,7 +58,7 @@ class EstatePropertyWebsite(http.Controller):
             raise NotFound()
         gallery_images = []
         index = 0
-        if property.image:
+        if property.image_1920:
             gallery_images.append(
                 {
                     "url": f"/web/image/estate.property/{property.id}/image_1920",

@@ -61,7 +61,7 @@ class EstatePropertyWebsite(http.Controller):
         if property.image:
             gallery_images.append(
                 {
-                    "url": f"/web/image/estate.property/{property.id}/image_1920",
+                    "url": f"/web/image/estate.property/{property.id}/image",
                     "alt": property.name,
                     "index": index,
                 }

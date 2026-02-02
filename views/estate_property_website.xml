@@ -490,6 +490,11 @@
                                                 No images available for this property.
                                             </div>
                                         </t>
+                                        <t t-else="">
+                                            <div class="hex-property-gallery__empty text-center text-muted py-5">
+                                                No images available for this property.
+                                            </div>
+                                        </t>
                                     </div>
                                     <t t-if="gallery_count &gt; 1">
                                         <button class="carousel-control-prev" type="button"

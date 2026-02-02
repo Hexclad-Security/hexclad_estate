@@ -13,11 +13,11 @@ class EstatePropertyUtility(models.Model):
     _description = "Real Estate Property Utility"
     _order = "name"
 
-    _constraints = [
-        models.Constraint(
+    _sql_constraints = [
+        (
             "check_name",
             "UNIQUE(name)",
-            message="The utility name must be unique",
+            "The utility name must be unique",
         ),
     ]
 

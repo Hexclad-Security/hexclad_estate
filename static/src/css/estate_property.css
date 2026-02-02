@@ -92,6 +92,12 @@
     color: #64748b;
 }
 
+.estate-stat__icon--image {
+    width: 16px;
+    height: 16px;
+    display: inline-block;
+}
+
 .estate-card-header {
     font-size: 0.75rem;
     letter-spacing: 0.08em;

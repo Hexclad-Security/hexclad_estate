@@ -94,7 +94,6 @@
             <t t-set="address_parts"
                t-value="[property.street or '', property.street2 or '', property.city or '', property.state_id.name if property.state_id else '', property.country_id.name if property.country_id else '', property.postcode or '']"/>
             <t t-set="address_display" t-value="', '.join([part for part in address_parts if part])"/>
-            <t t-set="hero_image" t-value="gallery_images[0] if gallery_images else False"/>
             <div class="container my-5 estate-property-detail estate-property-showcase hex-estate-property-page">
                 <nav aria-label="breadcrumb" class="estate-breadcrumb mb-3">
                     <ol class="breadcrumb">
@@ -165,18 +164,17 @@
                 </header>
 
                 <section class="estate-gallery estate-gallery--hero mt-4" data-gallery="property">
-                    <t t-if="gallery_count">
+                    <t t-if="gallery_images">
                         <div class="estate-gallery__hero">
                             <button type="button"
                                     class="estate-gallery__hero-item hex-property-thumb"
                                     data-index="0"
-                                    t-att-data-full-src="'/web/image/%s/%s/image_1920' % (hero_image['model'], hero_image['id'])"
                                     t-att-aria-label="'View image %s' % 1">
                                 <img class="estate-gallery__hero-image"
                                      loading="eager"
                                      fetchpriority="high"
-                                     t-att-src="'/web/image/%s/%s/image_1920' % (hero_image['model'], hero_image['id'])"
-                                     t-att-alt="hero_image.get('name') or property.name"/>
+                                     t-att-src="gallery_images[0]['url']"
+                                     t-att-alt="gallery_images[0]['alt']"/>
                             </button>
                             <button type="button"
                                     class="estate-gallery__view-all hex-property-thumb"
@@ -188,25 +186,22 @@
                             </button>
                         </div>
                         <div class="estate-gallery__thumbs">
-                            <t t-foreach="gallery_images" t-as="image" t-foreach-index="index">
-                                <t t-if="(index or 0) &gt; 0 and (index or 0) &lt; 5">
-                                    <button type="button"
-                                            class="estate-gallery__thumb hex-property-thumb"
-                                            t-att-data-index="index"
-                                            t-att-data-full-src="'/web/image/%s/%s/image_1920' % (image['model'], image['id'])"
-                                            t-att-aria-label="'View image %s' % ((index or 0) + 1)">
-                                        <img class="estate-gallery__thumb-image"
-                                             loading="lazy"
-                                             t-att-src="'/web/image/%s/%s/image_1920' % (image['model'], image['id'])"
-                                             t-att-alt="image.get('name') or property.name"/>
-                                    </button>
-                                </t>
+                            <t t-foreach="gallery_images" t-as="image">
+                                <button type="button"
+                                        class="estate-gallery__thumb hex-property-thumb"
+                                        t-att-data-index="image['index']"
+                                        t-att-aria-label="'View image %s' % (image['index'] + 1)">
+                                    <img class="estate-gallery__thumb-image"
+                                         loading="lazy"
+                                         t-att-src="image['url']"
+                                         t-att-alt="image['alt']"/>
+                                </button>
                             </t>
                         </div>
                     </t>
                     <t t-else="">
-                        <div class="estate-gallery__placeholder" aria-label="No images available">
-                            <span class="text-muted">No images available</span>
+                        <div class="estate-gallery__placeholder" aria-label="No photos available">
+                            <span class="text-muted">No photos available</span>
                         </div>
                     </t>
                 </section>
@@ -460,31 +455,31 @@
                                      class="carousel slide"
                                      data-bs-ride="false"
                                      aria-label="Property photo carousel">
-                                    <t t-if="gallery_count">
+                                    <t t-if="gallery_images">
                                         <div class="carousel-indicators">
-                                            <t t-foreach="gallery_images" t-as="image" t-foreach-index="index">
+                                            <t t-foreach="gallery_images" t-as="image">
                                                 <button type="button"
                                                         data-bs-target="#hex_property_gallery_carousel"
-                                                        t-att-data-bs-slide-to="index"
-                                                        t-attf-class="#{'active' if (index or 0) == 0 else ''}"
-                                                        t-att-aria-current="'true' if (index or 0) == 0 else None"
-                                                        t-att-aria-label="'Slide %s' % ((index or 0) + 1)"></button>
+                                                        t-att-data-bs-slide-to="image['index']"
+                                                        t-attf-class="#{'active' if image['index'] == 0 else ''}"
+                                                        t-att-aria-current="'true' if image['index'] == 0 else None"
+                                                        t-att-aria-label="'Slide %s' % (image['index'] + 1)"></button>
                                             </t>
                                         </div>
                                     </t>
                                     <div class="carousel-inner">
-                                        <t t-if="gallery_count">
-                                            <t t-foreach="gallery_images" t-as="image" t-foreach-index="index">
-                                                <div t-attf-class="carousel-item #{'active' if (index or 0) == 0 else ''}">
+                                        <t t-if="gallery_images">
+                                            <t t-foreach="gallery_images" t-as="image">
+                                                <div t-attf-class="carousel-item #{'active' if image['index'] == 0 else ''}">
                                                     <img class="d-block w-100 hex-property-gallery__image"
-                                                         t-att-src="'/web/image/%s/%s/image_1920' % (image['model'], image['id'])"
-                                                         t-att-alt="image.get('name') or property.name"/>
+                                                         t-att-src="image['url']"
+                                                         t-att-alt="image['alt']"/>
                                                 </div>
                                             </t>
                                         </t>
                                         <t t-else="">
                                             <div class="hex-property-gallery__empty text-center text-muted py-5">
-                                                No images available for this property.
+                                                No photos available for this property.
                                             </div>
                                         </t>
                                     </div>

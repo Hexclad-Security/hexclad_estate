@@ -24,6 +24,23 @@ class EstatePropertyWebsite(http.Controller):
         website_user = request.website.user_id
         return request.env["estate.property"].with_user(website_user)
 
+    @staticmethod
+    def _extract_property_id(property_slug):
+        try:
+            return int((property_slug or "").rsplit("-", 1)[-1])
+        except (TypeError, ValueError):
+            raise NotFound()
+
+    @staticmethod
+    def _sitemap_properties(env, rule, qs):
+        Property = env["estate.property"].sudo()
+        properties = Property.search(
+            [("website_published", "=", True), ("active", "=", True)]
+        )
+        for property_record in properties:
+            if property_record.website_url:
+                yield {"loc": property_record.website_url}
+
     @http.route(["/properties"], type="http", auth="public", website=True, sitemap=True)
     def properties(self, type_id=None, state=None, **kwargs):
         Property = self._get_property_model()
@@ -53,15 +70,16 @@ class EstatePropertyWebsite(http.Controller):
         return request.render("hexclad_estate.estate_property_listing", values)
 
     @http.route(
-        ["/properties/<model('estate.property'):property>"],
+        ["/properties/<string:property_slug>"],
         type="http",
         auth="public",
         website=True,
-        sitemap=True,
+        sitemap=_sitemap_properties,
     )
-    def property_detail(self, property, **kwargs):
-        self._get_property_model()
-        if not property.website_published or not property.active:
+    def property_detail(self, property_slug, **kwargs):
+        property_id = self._extract_property_id(property_slug)
+        property = request.env["estate.property"].sudo().browse(property_id).exists()
+        if not property or not property.website_published or not property.active:
             raise NotFound()
         gallery_images = []
         index = 0
@@ -74,7 +92,7 @@ class EstatePropertyWebsite(http.Controller):
                 }
             )
             index += 1
-        for image in property.image_ids:
+        for image in property.image_ids.sudo():
             gallery_images.append(
                 {
                     "url": f"/web/image/estate.property.image/{image.id}/image_1920",
@@ -111,16 +129,17 @@ class EstatePropertyWebsite(http.Controller):
         )
 
     @http.route(
-        ["/properties/<model('estate.property'):property>/inquiry"],
+        ["/properties/<string:property_slug>/inquiry"],
         type="http",
         auth="public",
         website=True,
         methods=["POST"],
         csrf=True,
     )
-    def property_inquiry(self, property, **post):
-        self._get_property_model()
-        if not property.website_published or not property.active:
+    def property_inquiry(self, property_slug, **post):
+        property_id = self._extract_property_id(property_slug)
+        property = request.env["estate.property"].sudo().browse(property_id).exists()
+        if not property or not property.website_published or not property.active:
             raise NotFound()
         name = (post.get("name") or "").strip() or "Website Visitor"
         email = (post.get("email") or "").strip()

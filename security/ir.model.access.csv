@@ -5,6 +5,8 @@ access_estate_property_user,estate.property.user,model_estate_property,estate_gr
 access_estate_property_manager,estate.property.manager,model_estate_property,estate_group_manager,1,1,1,1
 access_estate_property_public,estate.property.public,model_estate_property,base.group_public,1,0,0,0
 access_estate_property_portal,estate.property.portal,model_estate_property,base.group_portal,1,0,0,0
+access_res_partner_public,res.partner.public,base.model_res_partner,base.group_public,1,0,0,0
+access_res_partner_portal,res.partner.portal,base.model_res_partner,base.group_portal,1,0,0,0
 access_estate_property_type_user,estate.property.type.user,model_estate_property_type,estate_group_user,1,0,0,0
 access_estate_property_type_manager,estate.property.type.manager,model_estate_property_type,estate_group_manager,1,1,1,1
 access_estate_property_type_portal,estate.property.type.portal,model_estate_property_type,base.group_portal,1,0,0,0

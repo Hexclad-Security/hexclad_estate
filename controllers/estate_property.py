@@ -38,7 +38,10 @@ class EstatePropertyWebsite(http.Controller):
         if state:
             domain.append(("state", "=", state))
         properties = Property.search(domain)
-        property_types = request.env["estate.property.type"].with_user(request.website.user_id).search([])
+        # Property type metadata powers public filters on this page. Keep this
+        # read privileged because estate.property.type intentionally has no
+        # ACL for public/portal users.
+        property_types = request.env["estate.property.type"].sudo().search([])
         state_selection = request.env["estate.property"]._fields["state"].selection
         values = {
             "properties": properties,

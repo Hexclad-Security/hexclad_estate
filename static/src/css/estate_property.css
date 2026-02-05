@@ -45,6 +45,27 @@
     max-width: 520px;
 }
 
+.estate-property-listing-card {
+    overflow: hidden;
+}
+
+.estate-property-listing-image {
+    width: 100%;
+    height: 220px;
+    object-fit: cover;
+    display: block;
+}
+
+.estate-property-listing-body {
+    display: flex;
+    flex-direction: column;
+    min-height: 190px;
+}
+
+.estate-property-listing-footer {
+    padding-top: 0.5rem;
+}
+
 .estate-property-detail {
     color: #0f172a;
 }

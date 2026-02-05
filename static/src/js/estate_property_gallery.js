@@ -17,7 +17,7 @@ publicWidget.registry.HexPropertyGallery = publicWidget.Widget.extend({
     _onGalleryClick(event) {
         event.preventDefault();
         const index = Number(event.currentTarget.dataset.index || 0);
-        if (!this.$carousel.length || Number.isNaN(index) || !window.bootstrap) {
+        if (!this.$carousel.length || Number.isNaN(index)) {
             return;
         }
 
@@ -27,8 +27,23 @@ publicWidget.registry.HexPropertyGallery = publicWidget.Widget.extend({
             return;
         }
 
-        const modal = window.bootstrap.Modal.getOrCreateInstance(modalElement);
-        const carousel = window.bootstrap.Carousel.getOrCreateInstance(carouselElement, {
+        const bootstrapModal = window.bootstrap?.Modal;
+        const bootstrapCarousel = window.bootstrap?.Carousel;
+        if (!bootstrapModal || !bootstrapCarousel) {
+            if (this.$modal.modal) {
+                const $items = this.$carousel.find(".carousel-item");
+                const hasTarget = index >= 0 && index < $items.length;
+                if (hasTarget) {
+                    $items.removeClass("active");
+                    $items.eq(index).addClass("active");
+                }
+                this.$modal.modal("show");
+            }
+            return;
+        }
+
+        const modal = bootstrapModal.getOrCreateInstance(modalElement);
+        const carousel = bootstrapCarousel.getOrCreateInstance(carouselElement, {
             interval: false,
             ride: false,
             wrap: true,
@@ -37,3 +52,5 @@ publicWidget.registry.HexPropertyGallery = publicWidget.Widget.extend({
         modal.show();
     },
 });
+
+export default publicWidget.registry.HexPropertyGallery;

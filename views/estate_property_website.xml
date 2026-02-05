@@ -136,7 +136,12 @@
                         </t>
                         <t t-if="property.living_area">
                             <span class="estate-stat">
-                                <i class="fa fa-ruler-combined estate-stat__icon" aria-hidden="true"></i>
+                                <img class="estate-stat__icon estate-stat__icon--image"
+                                     src="/hexclad_estate/static/src/img/icons/sqft.svg"
+                                     alt=""
+                                     loading="lazy"
+                                     width="16"
+                                     height="16"/>
                                 <strong><t t-esc="property.living_area"/></strong> Sqft
                             </span>
                         </t>

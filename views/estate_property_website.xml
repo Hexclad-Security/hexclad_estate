@@ -40,24 +40,24 @@
                     <t t-if="properties">
                         <t t-foreach="properties" t-as="property">
                             <div class="col-md-6 col-lg-4">
-                                <div class="card h-100 shadow-sm">
+                                <div class="card h-100 shadow-sm estate-property-listing-card">
                                     <a t-att-href="property.website_url" class="text-decoration-none">
                                         <t t-if="property.image_ids">
                                             <img t-att-src="'/web/image/estate.property.image/%s/image_1920' % property.image_ids[0].id"
-                                                 class="card-img-top" t-att-alt="property.name"/>
+                                                 class="card-img-top estate-property-listing-image" t-att-alt="property.name"/>
                                         </t>
                                         <t t-elif="property.image">
                                             <img t-att-src="'/web/image/estate.property/%s/image' % property.id"
-                                                 class="card-img-top" t-att-alt="property.name"/>
+                                                 class="card-img-top estate-property-listing-image" t-att-alt="property.name"/>
                                         </t>
                                         <t t-else="">
-                                            <div class="bg-light d-flex align-items-center justify-content-center"
-                                                 style="height: 220px;">
+                                            <div class="bg-light d-flex align-items-center justify-content-center estate-property-listing-image"
+                                                 aria-label="No image available">
                                                 <span class="text-muted">No image</span>
                                             </div>
                                         </t>
                                     </a>
-                                    <div class="card-body">
+                                    <div class="card-body estate-property-listing-body">
                                         <h5 class="card-title">
                                             <a t-att-href="property.website_url" class="text-decoration-none text-dark">
                                                 <t t-esc="property.name"/>
@@ -66,7 +66,7 @@
                                         <p class="card-text text-muted mb-2">
                                             <t t-esc="property.property_type_id.name or ''"/> • <t t-esc="property.city or ''"/>
                                         </p>
-                                        <div class="d-flex justify-content-between align-items-center">
+                                        <div class="d-flex justify-content-between align-items-center mt-auto estate-property-listing-footer">
                                             <span class="fw-semibold">$<t t-esc="property.expected_price"/></span>
                                             <span class="badge bg-secondary">
                                                 <t t-esc="state_map.get(property.state)"/>

@@ -307,8 +307,10 @@ class EstateProperty(models.Model):
     @api.depends("offer_ids.price")
     def _compute_best_price(self):
         for record in self:
-            if record.offer_ids:
-                record.best_price = max(record.offer_ids.mapped("price"))
+            # Offers stay access-restricted; only this aggregate is computed with sudo.
+            offers = record.sudo().offer_ids
+            if offers:
+                record.best_price = max(offers.mapped("price"))
             else:
                 record.best_price = 0.0
     

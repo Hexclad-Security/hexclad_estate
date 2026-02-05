@@ -18,7 +18,11 @@ class EstatePropertyWebsite(http.Controller):
     def _get_property_model(self):
         if "estate.property" not in request.env.registry.models:
             raise NotFound()
-        return request.env["estate.property"].sudo()
+        # For auth="public" routes, force reads through the Website Public User
+        # so both anonymous and logged-in internal users get consistent access
+        # controlled by public ACLs + record rules (no blanket sudo bypass).
+        website_user = request.website.user_id
+        return request.env["estate.property"].with_user(website_user)
 
     @http.route(["/properties"], type="http", auth="public", website=True, sitemap=True)
     def properties(self, type_id=None, state=None, **kwargs):
@@ -34,7 +38,7 @@ class EstatePropertyWebsite(http.Controller):
         if state:
             domain.append(("state", "=", state))
         properties = Property.search(domain)
-        property_types = request.env["estate.property.type"].sudo().search([])
+        property_types = request.env["estate.property.type"].with_user(request.website.user_id).search([])
         state_selection = request.env["estate.property"]._fields["state"].selection
         values = {
             "properties": properties,

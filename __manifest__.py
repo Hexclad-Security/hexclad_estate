@@ -38,6 +38,7 @@ Built for RANCS Capital LLC.
         # Security first (for existing models)
         "data/estate_security.xml",
         "security/estate_website_security.xml",
+        "security/estate_security_rules.xml",
         "security/ir.model.access.csv",
         # Data - stages must be loaded early
         "data/estate_property_stage_data.xml",

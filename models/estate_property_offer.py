@@ -137,8 +137,8 @@ class EstatePropertyOffer(models.Model):
     def action_accept(self):
         """Accept this offer."""
         for record in self:
-            if record.property_id.state == "sold":
-                raise UserError("This property has already been sold.")
+            if record.property_id.state in ("sold", "canceled"):
+                raise UserError("This property is no longer available for offer acceptance.")
             
             # Refuse all other offers
             other_offers = record.property_id.offer_ids.filtered(

@@ -465,6 +465,7 @@
                                     <div id="hex_property_gallery_carousel"
                                          class="carousel slide"
                                          data-bs-ride="false"
+                                         data-bs-wrap="true"
                                          aria-label="Property photo carousel">
                                         <t t-if="gallery_count &gt; 1">
                                             <div class="carousel-indicators">

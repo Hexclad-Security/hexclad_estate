@@ -14,26 +14,57 @@ publicWidget.registry.HexPropertyGallery = publicWidget.Widget.extend({
         return this._super(...arguments);
     },
 
+    _setActiveSlide(index) {
+        const $items = this.$carousel.find(".carousel-item");
+        if (!$items.length) {
+            return null;
+        }
+
+        const safeIndex = index >= 0 && index < $items.length ? index : 0;
+        $items.removeClass("active");
+        $items.eq(safeIndex).addClass("active");
+
+        const $indicators = this.$carousel.find(".carousel-indicators [data-bs-slide-to]");
+        if ($indicators.length) {
+            $indicators.removeClass("active").removeAttr("aria-current");
+            $indicators.eq(safeIndex).addClass("active").attr("aria-current", "true");
+        }
+
+        return safeIndex;
+    },
+
     _onGalleryClick(event) {
         event.preventDefault();
         const index = Number(event.currentTarget.dataset.index || 0);
-        if (!this.$carousel.length || Number.isNaN(index) || !window.bootstrap) {
+        if (!this.$carousel.length || Number.isNaN(index)) {
             return;
         }
 
         const modalElement = this.$modal.get(0);
         const carouselElement = this.$carousel.get(0);
-        if (!carouselElement || !modalElement) {
+        const activeIndex = this._setActiveSlide(index);
+        if (!carouselElement || !modalElement || activeIndex === null) {
             return;
         }
 
-        const modal = window.bootstrap.Modal.getOrCreateInstance(modalElement);
-        const carousel = window.bootstrap.Carousel.getOrCreateInstance(carouselElement, {
+        const bootstrapModal = window.bootstrap?.Modal;
+        const bootstrapCarousel = window.bootstrap?.Carousel;
+        if (!bootstrapModal || !bootstrapCarousel) {
+            if (this.$modal.modal) {
+                this.$modal.modal("show");
+            }
+            return;
+        }
+
+        const modal = bootstrapModal.getOrCreateInstance(modalElement);
+        const carousel = bootstrapCarousel.getOrCreateInstance(carouselElement, {
             interval: false,
             ride: false,
             wrap: true,
         });
-        carousel.to(index);
+        carousel.to(activeIndex);
         modal.show();
     },
 });
+
+export default publicWidget.registry.HexPropertyGallery;

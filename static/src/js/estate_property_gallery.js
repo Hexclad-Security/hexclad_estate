@@ -31,8 +31,12 @@ publicWidget.registry.HexPropertyGallery = publicWidget.Widget.extend({
         const bootstrapCarousel = window.bootstrap?.Carousel;
         if (!bootstrapModal || !bootstrapCarousel) {
             if (this.$modal.modal) {
-                this.$carousel.find(".carousel-item").removeClass("active");
-                this.$carousel.find(".carousel-item").eq(index).addClass("active");
+                const $items = this.$carousel.find(".carousel-item");
+                const hasTarget = index >= 0 && index < $items.length;
+                if (hasTarget) {
+                    $items.removeClass("active");
+                    $items.eq(index).addClass("active");
+                }
                 this.$modal.modal("show");
             }
             return;

@@ -59,11 +59,12 @@
 .estate-property-listing-body {
     display: flex;
     flex-direction: column;
-    min-height: 190px;
+    gap: 0.25rem;
 }
 
 .estate-property-listing-footer {
-    padding-top: 0.5rem;
+    margin-top: auto;
+    padding-top: 0.25rem;
 }
 
 .estate-property-detail {

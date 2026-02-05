@@ -14,6 +14,25 @@ publicWidget.registry.HexPropertyGallery = publicWidget.Widget.extend({
         return this._super(...arguments);
     },
 
+    _setActiveSlide(index) {
+        const $items = this.$carousel.find(".carousel-item");
+        if (!$items.length) {
+            return null;
+        }
+
+        const safeIndex = index >= 0 && index < $items.length ? index : 0;
+        $items.removeClass("active");
+        $items.eq(safeIndex).addClass("active");
+
+        const $indicators = this.$carousel.find(".carousel-indicators [data-bs-slide-to]");
+        if ($indicators.length) {
+            $indicators.removeClass("active").removeAttr("aria-current");
+            $indicators.eq(safeIndex).addClass("active").attr("aria-current", "true");
+        }
+
+        return safeIndex;
+    },
+
     _onGalleryClick(event) {
         event.preventDefault();
         const index = Number(event.currentTarget.dataset.index || 0);
@@ -23,7 +42,8 @@ publicWidget.registry.HexPropertyGallery = publicWidget.Widget.extend({
 
         const modalElement = this.$modal.get(0);
         const carouselElement = this.$carousel.get(0);
-        if (!carouselElement || !modalElement) {
+        const activeIndex = this._setActiveSlide(index);
+        if (!carouselElement || !modalElement || activeIndex === null) {
             return;
         }
 
@@ -31,12 +51,6 @@ publicWidget.registry.HexPropertyGallery = publicWidget.Widget.extend({
         const bootstrapCarousel = window.bootstrap?.Carousel;
         if (!bootstrapModal || !bootstrapCarousel) {
             if (this.$modal.modal) {
-                const $items = this.$carousel.find(".carousel-item");
-                const hasTarget = index >= 0 && index < $items.length;
-                if (hasTarget) {
-                    $items.removeClass("active");
-                    $items.eq(index).addClass("active");
-                }
                 this.$modal.modal("show");
             }
             return;
@@ -48,7 +62,7 @@ publicWidget.registry.HexPropertyGallery = publicWidget.Widget.extend({
             ride: false,
             wrap: true,
         });
-        carousel.to(index);
+        carousel.to(activeIndex);
         modal.show();
     },
 });

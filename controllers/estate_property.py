@@ -18,7 +18,7 @@ class EstatePropertyWebsite(http.Controller):
     def _get_property_model(self):
         if "estate.property" not in request.env.registry.models:
             raise NotFound()
-        return request.env["estate.property"].sudo()
+        return request.env["estate.property"]
 
     @http.route(["/properties"], type="http", auth="public", website=True, sitemap=True)
     def properties(self, type_id=None, state=None, **kwargs):
